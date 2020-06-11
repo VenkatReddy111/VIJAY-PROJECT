@@ -1,0 +1,184 @@
+<div class="page-heading">
+    <h1>Allocation</h1>
+</div>
+
+<div class="table-wrapper table-wrapper-card">
+    <dx-data-grid
+        [dataSource]="allocation" 
+        [showRowLines]="false"
+        showBorders='true' 
+        (onRowUpdated)="onRowUpdated($event)"
+        >
+
+        <!--Table filters-->    
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search&nbsp;  "></dxo-search-panel>
+        <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+        <dxo-editing
+            mode="cell"
+            [allowUpdating]="true">
+        </dxo-editing>
+
+        <!--Customized column for Document Type-->
+        <dxi-column [allowSorting]="false" [allowEditing]="false" dataField="docType" caption="Type" ></dxi-column>
+        
+        <!--Customized column for Document Sub Type-->
+        <dxi-column [allowSorting]="false" [allowEditing]="false" caption="Subtype" dataField="docSubType"></dxi-column>
+        
+        <!--Customized column for Stage-->
+        <dxi-column [allowSorting]="false" [allowEditing]="false" dataField="stage" caption="Stage" ></dxi-column>
+
+        <!--Customized column for Count-->
+        <dxi-column [allowSorting]="false" [allowEditing]="false" [allowHeaderFiltering]="false" dataField="count" caption="Document Count"  alignment="center"></dxi-column>
+
+        <!--Customized column for Users-->
+        <dxi-column [allowSorting]="false" [allowEditing]="false" [allowHeaderFiltering]="false" dataField="userDisplayString" caption="Users" cellTemplate="usersTemplate"></dxi-column>
+        <div *dxTemplate="let users of 'usersTemplate'; let itemIndex = index">
+             <span (click)="allocatedUsersPopup(users)" class="btn-link" >{{users.data.userDisplayString}}</span>
+         </div>
+         <dxi-column 
+         dataField="priority"
+         caption="Priority"
+         >
+         <dxo-lookup 
+          id="dxolookup"
+             [dataSource]="priorities"
+             valueExpr="ID"
+             displayExpr="Priority"
+             >
+         </dxo-lookup>
+     </dxi-column>
+      
+       
+    </dx-data-grid>
+</div>
+
+<!--===== Sucessfull message for allocated users starts=====-->
+
+<div class="message-alert success top-0"  *ngIf="alertmessage">
+    <div class="d-flex align-items-center justify-content-between">
+        <p><i class="icon dx-icon-check"></i>Users allocated successfully</p>
+        <!-- <dx-button icon="close" (onClick)="hideAlert($event);"></dx-button> -->
+    </div>
+</div> 
+
+<!--===== Sucessfull message for allocated users ends=====-->
+
+
+<!-- Allocated Users popup starts -->
+<!-- <dx-popup
+    class="custom-popup height-auto"
+    [width]="650"
+    [height]="500"
+    [showTitle]="true"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="false"
+    [title]=" 'Allocate users to type - ' + popupTitle"
+    [(visible)]="allocatedUsersPopupVisible" 
+    [showCloseButton]="false">
+    <perfect-scrollbar style="height: calc(100vh - 558px);">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="draggable-list"  style="height: calc(100vh - 431px);">
+                    <dx-list class="draggable-item" [dataSource]="defaultUsers"
+                        [repaintChangesOnly]="true" [searchEnabled]="true" searchExpr="text"
+                        searchMode="contains">
+
+                        <dxo-item-dragging group="tasks" [data]="defaultUsers" [allowReordering]="true"
+                            [onDragStart]="onDragStart" [onAdd]="onAdd" [onRemove]="onRemove">
+                        </dxo-item-dragging>
+
+                        <div *dxTemplate="let data of 'item'">
+                            <div class="title">{{data.text}}</div>
+                            <div style="width: 180px;" class="subtitle texttruncate">{{data.hint}}</div>
+                        </div>
+                    </dx-list>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="added-items-count">Added users (<span>{{selectedUsers.length}}</span>)</div>
+                <div class="draggable-list draggablearea" style="height: calc(100vh - 431px);">
+                    <dx-list class="draggable-item" [dataSource]="selectedUsers"
+                        [repaintChangesOnly]="true">
+
+                        <dxo-item-dragging group="tasks" [data]="selectedUsers" [allowReordering]="true"
+                            [onDragStart]="onDragStart" [onAdd]="onAdd" [onRemove]="onRemove">
+                        </dxo-item-dragging>
+
+                        <div *dxTemplate="let data of 'item'; let i = index">
+                            <div class="title">{{data.text}}</div>
+                            <div class="subtitle">{{data.hint}}</div>
+                        </div>
+                    </dx-list>
+                </div>
+            </div>
+        </div>
+    </perfect-scrollbar>
+
+    <div class="custom-popup-footer">
+        <dx-button class="btn btn-secondary" text="Cancel" (onClick)="allocatedUsersPopupVisible = false"></dx-button>
+        <dx-button class="btn btn-primary" text="Save" (onClick)="allocatedUsersPopupSave();"></dx-button>
+    </div>
+</dx-popup> -->
+<!-- Allocated Users popup ends -->
+<!-- Allocated New Popup  starts -->
+<dx-popup
+        class="custom-popup height-auto"
+        [width]="650"
+        [height]="500"
+        [showTitle]="true"
+        [dragEnabled]="false"
+        [closeOnOutsideClick]="false"
+        [title]=" 'Allocate users to type - ' + popupTitle"
+        [(visible)]="allocatedUsersPopupVisible" 
+        [showCloseButton]="false">
+        <!-- <perfect-scrollbar style="height: calc(100vh - 235px);">  -->
+            <div class="row">
+                <div class="col-sm-6">
+                        <div class="draggable-list" style="height: 290px;"> <!-- 27th Jan 2020 -->
+                            <dx-list class="draggable-item" [items]="defaultUsers"
+                            [repaintChangesOnly]="true" [searchEnabled]="true" searchExpr="text"
+                                searchMode="contains">
+    
+                                <dxo-item-dragging group="tasks" [data]="defaultUsers" [allowReordering]="true"
+                            [onDragStart]="onDragStart" [onAdd]="onAdd" [onRemove]="onRemove">
+                        </dxo-item-dragging>
+    
+                        <div *dxTemplate="let data of 'item'">
+                            <div class="title">{{data.text}}</div>
+                            <div [title]="data.hint">
+                                <div style="width: 180px;" class="subtitle texttruncate">{{data.hint}}</div>
+                            </div>
+                        </div>
+                            </dx-list>
+                        </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="added-items-count">Added users (<span>{{selectedUsers.length}}</span>)</div>
+                    <div class="draggable-list draggable-area" style="height: 280px;"> <!-- 27th Jan 2020 -->
+                        <dx-list class="draggable-item" [dataSource]="selectedUsers"
+                        [repaintChangesOnly]="true">
+    
+                        <dxo-item-dragging group="tasks" [data]="selectedUsers" [allowReordering]="true"
+                        [onDragStart]="onDragStart" [onAdd]="onAdd" [onRemove]="onRemove">
+                    </dxo-item-dragging>
+    
+                    <div *dxTemplate="let data of 'item'; let i = index">
+                        <div class="title">{{data.text}}</div>
+                        <div [title]="data.hint" class="title hover-text hover-text-tablesme">
+			                <div style="width: 250px;" class="subtitle text-truncate">{{data.hint}}</div>
+                        </div>
+                    </div>
+                        </dx-list>
+                    </div>
+                </div>
+            </div>
+        <!-- </perfect-scrollbar> --> <!-- 27th Jan 2020 -->
+    
+        <div class="custom-popup-footer">
+            <dx-button class="btn btn-secondary" text="Cancel" (onClick)="allocatedUsersPopupVisible = false"></dx-button>
+        <dx-button class="btn btn-primary" text="Save" (onClick)="allocatedUsersPopupSave();"></dx-button>
+      </div>
+    </dx-popup>

@@ -1,0 +1,150 @@
+<div class="page-heading">
+    <h1>Create Table</h1>
+</div>
+ 
+        <div class="table-wrapper table-wrapper-card">
+            <div class="grid-buttons p-20">
+                <dx-button  (click)="addPopup('Add')" class="btn btn-primary"   text="Add"></dx-button>   
+                <dx-button  (click)="addKMPopup('Add')" class="btn btn-primary"   text="Add KM"></dx-button>   
+            </div>
+            
+            
+            <dx-data-grid #dataGrid class="page-table" id="gridappsetting" [dataSource]="TableList"
+                [showColumnHeaders]="false" [masterDetail]="{ enabled: true, template: 'detail' }" keyExpr="masterTableName"
+                [showBorders]="true" (onRowExpanding)="RowExpanding($event)" (onRowCollapsing)="RowCollapsing($event)">
+                <dxo-paging [enabled]="true"></dxo-paging>
+                <dxo-search-panel [visible]="true" [width]="315" placeholder="Search">
+                </dxo-search-panel>
+                <dxo-header-filter [allowSearch]="false" [visible]="true"></dxo-header-filter>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxi-column dataField="masterTableId" caption="Title"  [visible]="false"></dxi-column>
+                <dxi-column dataField="masterTableName" caption="Title"></dxi-column>
+
+                <dxi-column [allowHeaderFiltering]="false" dataField="isActive" caption="Status" cellTemplate="statusTemplate">
+                </dxi-column>
+                <div *dxTemplate="let statusItem of 'statusTemplate'">
+                    <span class="toggle"> 
+                        <dx-switch #rowjobstatus [value]='statusItem.data.isActive' (click) = "isactiveUpdate(rowjobstatus.value, statusItem.data)"></dx-switch>
+                    </span>
+                </div>
+
+
+
+                 <div *dxTemplate="let TableList of 'detail'">
+                   
+                     
+                    <dx-data-grid  [(dataSource)]="childDatasource" [showRowLines]="false" showBorders='true' (onRowInserting)="logEvent($event,childDatasource,'Inserting')"  (onRowInserted)="logEvent($event,childDatasource,'Inserted')" > 
+                        <dxo-editing mode="cell" [useIcons]="true"  [allowUpdating]="true"  [allowDeleting]="true"  [allowAdding]="true"></dxo-editing>
+                        <dxi-column dataField="displayName" caption="DisplayName"></dxi-column>
+                        <dxi-column dataField="value" caption="Value" >
+                        </dxi-column>
+                        
+                        
+                    </dx-data-grid>
+                    <div  style="padding: 19px 69px; right: 40px;">
+                        <dx-button class="btn btn-secondary" text="Save" (click)="SaveTableRows(childDatasource)"></dx-button>
+                    </div> 
+
+                </div>  
+              
+            </dx-data-grid>
+        </div> 
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="300px" [showTitle]="true"
+title="{{popuptitle}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showAddPopop"
+[showCloseButton]="false">
+<dx-validation-group #valGroup> 
+<form (submit)="Tablesave()">
+    <div class="row">
+        <div class="col-md-12">
+            <perfect-scrollbar class="h-150px">
+            <div class="dx-fieldset">
+                <div class="row"> 
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Table Name<span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-box [(value)]="MasterTableDetails.masterTableName" >
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Table Name is required">
+                                        </dxi-validation-rule>   
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            </perfect-scrollbar>
+            <div class="custom-popup-footer">
+                <dx-button class="btn btn-secondary" text="Cancel" (click)="Cancel()">
+                </dx-button>
+                <dx-button class="btn btn-primary" text="Save" [useSubmitBehavior]="true" ></dx-button>
+            </div>
+        </div>
+    </div>
+</form>
+</dx-validation-group>
+</dx-popup>
+
+
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="500px" [showTitle]="true"
+title="{{KMpopuptitle}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="KMshowAddPopop"
+[showCloseButton]="false">
+<dx-validation-group #valGroupKM> 
+<form (submit)="KMTablesave()">
+    <div class="row">
+        <div class="col-md-12">
+           
+            <div class="dx-fieldset">
+                <div class="row"> 
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Table Name<span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-box [(value)]="KMTableCreateAdd.tablename" >
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Table Name is required">
+                                        </dxi-validation-rule>   
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+               
+            </div>
+          
+                <div class="row"> 
+                    <div class="col-sm-12" >
+                        <div class="dx-field">
+                            <perfect-scrollbar class="h-150px">
+                            <dx-data-grid  [(dataSource)]="KMTableGridDatasource" [showRowLines]="false" showBorders='true'  
+                            (onRowInserted)="KMlogEvent($event,KMTableGridDatasource)"  > 
+                                <dxo-editing mode="cell" [useIcons]="true"  [allowUpdating]="true"  [allowDeleting]="true"  [allowAdding]="true"></dxo-editing>
+                                <dxi-column dataField="columnname" caption="Column Name"></dxi-column>
+                                <!-- <dxi-column dataField="datatype"  caption="Data Type" > 
+                                       <dxo-lookup [dataSource]="Columndatatype" valueExpr="Columndatatype.id" displayExpr="datatype"></dxo-lookup>  
+                                       <dx-drop-down-box [dataSource]="Columndatatype" [(value)]="Columndatatype.id" #drpDocCat displayExpr="datatype"
+                                    valueExpr="id" [showClearButton]="true"  ></dx-drop-down-box>   
+                                </dxi-column>  --> 
+                               
+                                
+                            </dx-data-grid>
+                            </perfect-scrollbar>
+                        </div>
+                    </div> 
+                </div>
+               
+
+          <div class="custom-popup-footer" style="margin-top: 105px;">
+                <dx-button class="btn btn-secondary" text="Cancel" (click)="CancelKMTable()">
+                </dx-button>
+                <dx-button class="btn btn-primary" text="Save" [useSubmitBehavior]="true" ></dx-button>
+            </div> 
+        
+        </div>
+    </div>
+</form>
+</dx-validation-group>
+</dx-popup>

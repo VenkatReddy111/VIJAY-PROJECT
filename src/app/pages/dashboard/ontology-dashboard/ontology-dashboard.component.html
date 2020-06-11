@@ -1,0 +1,465 @@
+<div class="page-heading">
+    <h1>Document definition</h1>
+</div>
+
+<div class="dashboard-counters">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <span class="count-type" [innerHTML]="convertDashboardCounter(categorycount)"></span>
+                        <div class="d-flex justify-content-start">
+                            <span [innerHTML]="convertDashboardCounterplurals(categorycount, 'Category')"
+                                class="label-type hover-text"></span>
+                            <div [innerHTML]="convertDashboardCounterplurals(categorycount, 'Category')"
+                                class="show-hover-text ontology-hover-text"></div>
+                        </div>
+                        <!-- <span *ngIf="categorycount <= 1" class="label-type">Category</span> -->
+
+                        <!-- <span class="card-icon-indication dx-icon-smalliconslayout"></span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <span class="count-type" [innerHTML]="convertDashboardCounter(docTypecount)"></span>
+                        <div class="d-flex justify-content-start">
+                            <span [innerHTML]="convertDashboardCounterplurals(docTypecount, 'Type')"
+                                class="label-type hover-text"></span>
+                            <div [innerHTML]="convertDashboardCounterplurals(docTypecount, 'Type')"
+                                class="show-hover-text ontology-hover-text"></div>
+                        </div>
+                        <!-- <span class="card-icon-indication dx-icon-columnchooser"></span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <span class="count-type" [innerHTML]="convertDashboardCounter(docsubtypecount)"></span>
+                        <div class="d-flex justify-content-start">
+                            <span [innerHTML]="convertDashboardCounterplurals(docsubtypecount, 'Subtype')"
+                                class="label-type hover-text"></span>
+                            <div [innerHTML]="convertDashboardCounterplurals(docsubtypecount, 'Subtype')"
+                                class="show-hover-text ontology-hover-text"></div>
+                            <!-- <span class="card-icon-indication dx-icon-columnfield"></span> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <span class="count-type" [innerHTML]="convertDashboardCounter(isactivecount)"></span>
+                        <span class="label-type">Active</span>
+                        <!-- <span class="card-icon-indication dx-icon-selectall"></span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Table start-->
+<!-- <perfect-scrollbar [config]="config"> -->
+<div class="table-wrapper table-wrapper-card ontology-dashboard-table">
+
+    <div class="grid-buttons p-20">
+        <dx-button *ngIf='(addBtn == true) && (Authorize.toAdd)' (click)="customAddPopup()" class="btn btn-primary"
+            text="Add"></dx-button>
+        <dx-button *ngIf='(duplicateBtn == true) && (Authorize.toAdd)' (click)="duplicatePopup()"
+            class="btn btn-secondary" text="Copy"></dx-button>
+        <dx-button *ngIf='(deleteBtn == true) && (Authorize.toDelete)' class="btn btn-secondary"
+            (onClick)="deleteRecords()" [text]="Doctext"></dx-button>
+        <dx-button *ngIf='(editBtn == true) && (Authorize.toUpdate)' class="btn btn-primary"
+            (onClick)="subdocTypeEditClick()" text="Edit"></dx-button>
+    </div>
+
+
+    <dx-data-grid #dataGrid [(dataSource)]="documentSubTypes" *ngIf="Authorize.toView" [showRowLines]="false"
+        showBorders='true' (onSelectionChanged)="OntologyDSHSelectionChanged($event)">
+
+        <!--Table columns start-->
+        <dxo-selection mode="multiple"></dxo-selection>
+
+        <!--Table filters-->
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search">
+        </dxo-search-panel>
+        <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+        <!--Customized column for Category-->
+        <dxi-column [allowSorting]="true" [allowHeaderFiltering]="true" dataField="docCategoryName" caption="Industry"
+            sortOrder="asc"></dxi-column>
+
+        <!--Customized column for Document Type-->
+        <dxi-column [allowSorting]="true" [allowHeaderFiltering]="true" dataField="documentTypeName" caption="Function">
+        </dxi-column>
+
+        <!--Customized column for Document Sub Type-->
+        <dxi-column [allowSorting]="true" [allowHeaderFiltering]="true" caption="Document" dataField="name"
+            cellTemplate="commandTemplate"></dxi-column>
+
+        <div *dxTemplate="let docSubType of 'commandTemplate'; let itemIndex = index">
+            <span (click)="gotoSMEDetail(docSubType.data)"
+                class="btn-link text-truncate">{{docSubType.data.name}}</span>
+        </div>
+
+        <dxi-column caption="documentCatId" [visible]="false" dataField="id" caption="Category"></dxi-column>
+        <dxi-column caption="documentTypeId" [visible]="false" dataField="name" caption="Type"></dxi-column>
+
+        <dxi-column [allowSorting]="true" [allowHeaderFiltering]="true" dataField="description" caption="Description">
+        </dxi-column>
+
+        <!--Customized column for Status-->
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" caption="Upload" dataField="name" cellTemplate="DllcommandTemplate"></dxi-column>
+        
+        <div *dxTemplate="let docSubType of 'DllcommandTemplate'; let itemIndex = index">
+            <span (click)="addPopup(docSubType.data)" class="btn-link text-truncate" >Custom Script</span>
+        </div>
+        <dxi-column [allowHeaderFiltering]="false" caption="Config" cellTemplate="prfTemplate" ></dxi-column>
+
+        <div *dxTemplate="let prf of 'prfTemplate'; let itemIndex = index">
+            <span class="btn-link text-truncate" (click)="managePrfPopup(prf.data)">Manage Config</span>
+        </div>
+        <dxi-column [allowHeaderFiltering]="false" dataField="isActive" caption="Status" cellTemplate="statusTemplate">
+        </dxi-column>
+        <div *dxTemplate="let statusItem of 'statusTemplate'">
+            <span class="toggle">
+                <dx-switch #rowjobstatus [value]='statusItem.data.isActive'
+                    (click)="UpdateDocumentStatus(rowjobstatus.value, statusItem.data)"></dx-switch>
+            </span>
+        </div>
+        
+   
+    </dx-data-grid>
+</div>
+<!-- </perfect-scrollbar> -->
+   
+<!--Browse FIle For DLL FIle upload-->
+
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="500px"  [showTitle]="true"
+title="{{dllPopupTitle}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showAddPopop"
+[showCloseButton]="true">
+<dx-validation-group #valGroupdll> 
+<form (submit)="UploadDll()">
+    <!-- <div class="row">
+        <div class="col-md-3"> <label>
+            Industry: {{CategoryNamelabel}}
+        </label></div>
+        <div class="col-md-3"><label>Function: {{DocumenttypeNamelabel}}</label></div>
+    </div>
+    <br/> -->
+    <div class="row">
+        <div class="col-md-12">
+            
+            <div class="dx-fieldset">
+                <div class="row"> 
+                    <div class="col-sm-6">
+                        <div class="dx-field">                                                                                   
+                            <div class="dx-field-label">Upload DLL File<span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <div class="doc-file-uploader">
+                                    <dx-file-uploader #DLLfileUploader
+                                        selectButtonText="Upload Dll" labelText=""
+                                        [allowedFileExtensions]="['.dll']"
+                                        uploadMode="useForm"
+                                        [multiple]="false"
+                                        (onValueChanged)="UploadDLLFile($event)"
+                                        invalidFileExtensionMessage="Please select dll file only" >
+                                        <dx-validator></dx-validator>
+                                    </dx-file-uploader>                                                                         
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+                <div class="row"> 
+                    <div class="col-sm-12">
+                        <div class="dx-field">
+                            <perfect-scrollbar class="h-150px">
+                            <dx-data-grid  [(dataSource)]="DocumentTypeDLLMappingData"    [showRowLines]="false"  showBorders='true'    (onSelectionChanged)="OntologyDSHSelectionChanged($event)" >
+        
+                               
+                               <dxo-paging [enabled]="true"></dxo-paging>
+                               <!-- <dxo-scrolling mode="infinite"></dxo-scrolling> -->
+                              
+                               <!--Customized column for Category-->
+                               <dxi-column   [visible]="false" dataField="docTypeDllMappingId" caption="Id" ></dxi-column>
+                               <dxi-column   [visible]="false"  dataField="categoryName" caption="Industry" ></dxi-column>
+                               <dxi-column   [visible]="false"  dataField="documentTypeName" caption="Function" ></dxi-column>
+                               <dxi-column    dataField="fileName" caption="File Name" ></dxi-column>
+                               <dxi-column    dataField="versionNo" caption="Version" ></dxi-column>
+                               <dxi-column  format="shortDate" dataType="date"  dataField="uploadDate" type="date" caption="Upload Date" ></dxi-column>
+                               <dxi-column format="shortDate" dataType="date"  dataField="mappedDate" type="date" caption="Mapped Date" ></dxi-column>
+                              
+                               
+                               <dxi-column    dataField="name" caption="Maping" cellTemplate="DllmapcommandTemplate"></dxi-column>
+                               
+                               <div *dxTemplate="let statusItem of 'DllmapcommandTemplate'">
+                                <span class="toggle">
+                                    <dx-switch #rowjobstatus [(value)]='statusItem.data.isMapped'
+                                        (click)="UpdateDllStatus(rowjobstatus.value, statusItem.data)"></dx-switch>
+                                </span>
+                            </div>
+                               </dx-data-grid>
+                            </perfect-scrollbar>
+                        </div>
+                    </div>
+                </div>
+           
+        
+           
+            
+            <div class="custom-popup-footer" >
+                <dx-button class="btn btn-secondary" text="Cancel" (click)="Cancel(DLLfileUploader)">
+                </dx-button>
+                <dx-button class="btn btn-primary" text="Save" [useSubmitBehavior]="true" ></dx-button>
+            </div>
+        </div>
+    </div>
+</form>
+</dx-validation-group>
+<div class="loader" *ngIf="showDLLoader"></div> 
+</dx-popup>
+
+<!--End Dll Browse Popup Code-->
+<!-- Edit Grid -->
+<dx-popup class="custom-popup" width="550px" height="570px" [showTitle]="true" [(title)]="popupTitle"
+    [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="popupVisible" [showCloseButton]="false">
+
+    <dx-validation-group #valGroup>
+        <form (submit)='saveAddEditDocumentSubType($event)'>
+            <!-- <perfect-scrollbar class="h-300px"> -->
+            <div class="dx-fieldset">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Document
+                                <span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-box [(value)]="docSubTypeModel.name">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Document name is required">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">&nbsp;</div>
+                            <div class="dx-field-value d-flex align-items-center pt-2"><span class="mr-10">
+                                    Status</span>
+                                <span class="toggle">
+                                    <dx-switch [(value)]="docSubTypeModel.isActive">
+                                    </dx-switch>
+                                </span></div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Industry
+                                <span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-select-box [items]="doccategories" [(value)]="docSubTypeModel.docCategoryId"
+                                    #drpDocCat placeholder="Select Industry" displayExpr="categoryName"
+                                    valueExpr="documentCatId" [showClearButton]="true" isRequired="true"
+                                    (onValueChanged)="documentcategoryChanged($event)">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="custom" message="Industry name is required"
+                                            [validationCallback]="validateMandatoryFieldValue">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+
+
+                                </dx-select-box>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Function
+                                <span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-select-box [items]="doctypes" [(value)]="docSubTypeModel.documentTypeId" #drpDocCat
+                                    placeholder="Select Function" displayExpr="documentTypeName" isRequired="true"
+                                    valueExpr="documentTypeId" [showClearButton]="true">
+
+                                    <dx-validator>
+                                        <dxi-validation-rule type="custom" message="Function name is required"
+                                            [validationCallback]="validateMandatoryFieldValue">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+
+                                </dx-select-box>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Description
+                                <span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-area [(value)]="docSubTypeModel.description">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Description is required">
+                                        </dxi-validation-rule>
+                                        <dxi-validation-rule type="stringLength" [min]="2" [max]="500"
+                                            message="Description must have at least 2 and maximum 500 characters.">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-area>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="dx-field">
+                            <div class="dx-field-value">
+                                <div class="doc-file-uploader">
+                                    <dx-file-uploader #vwfileUploaderProfileImage
+                                        selectButtonText="Upload sample document" labelText=""
+                                        [allowedFileExtensions]="['.jpg','.jpeg','.gif','.png', '.fpx', '.tif', '.tiff', '.psd' , '.eps','.ai','.pdf']"
+                                        uploadMode="useForm" [multiple]="false"
+                                        (onValueChanged)="uploadProfileImage($event)"
+                                        invalidFileExtensionMessage="Please select an image or pdf file only">
+                                        <dx-validator></dx-validator>
+                                    </dx-file-uploader>
+                                    <span *ngIf="filenameedit !=''" [innerHTML]="filenameedit"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- </perfect-scrollbar> -->
+            <dxi-item class="custom-popup-footer" dataField="">
+                <dx-button class="btn btn-secondary" text="Cancel"
+                    (click)="ClearSubtypeModel(vwfileUploaderProfileImage)"></dx-button>
+                <dx-button class="btn btn-primary" [useSubmitBehavior]="true"
+                    *ngIf='(deleteBtn == false && duplicateBtn == false)' text="Save"></dx-button>
+                <dx-button class="btn btn-primary" [useSubmitBehavior]="true" *ngIf='(duplicateBtn == true)'
+                    text="Update"></dx-button>
+            </dxi-item>
+
+        </form>
+    </dx-validation-group>
+</dx-popup>
+
+
+<!-- Duplicate popup starts -->
+<dx-popup class="custom-popup height-auto" [width]="400" [height]="500" [showTitle]="true" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" title="Duplicate document subtype" [(visible)]="duplicatePopupVisible"
+    [showCloseButton]="false">
+    <dx-validation-group #valDuplicate>
+        <form (submit)="saveDuplicateSubtype()">
+            <div class="dx-field">
+                <dx-text-box class="dx-field-value" name="subtypename" [(value)]="duplicatesubtype"
+                    placeholder="Sub-type name">
+                    <dx-validator>
+                        <dxi-validation-rule type="required" message="Please enter the subtype name">
+                        </dxi-validation-rule>
+                    </dx-validator>
+                </dx-text-box>
+            </div>
+
+            <div class="custom-popup-footer">
+                <dx-button class="btn btn-secondary" text="Cancel" (onClick)="cancelDuplicateSubtype()"></dx-button>
+                <dx-button class="btn btn-primary" text="Duplicate" [useSubmitBehavior]="true"></dx-button>
+            </div>
+        </form>
+    </dx-validation-group>
+</dx-popup>
+<!-- Delete confirmation popup -->
+<div class="custom-overlay" *ngIf='deleteModal'>
+    <div class="custom-popup confirmation-popup">
+        <div class="custom-popup-body">
+            <h6>{{userstatus}}</h6>
+            <p>{{userstatuss}}</p>
+        </div>
+        <div class="custom-popup-footer">
+            <dx-button class="btn btn-secondary" text="Cancel" (click)="deleteModal = false"></dx-button>
+            <dx-button class="btn btn-primary" [text]="Doctext" (click)="delete()"></dx-button>
+        </div>
+    </div>
+</div>
+<!-- Delete confirmation popup -->
+
+<!--Manage PRF pop up-->
+
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="500px" [showTitle]="true"
+    title="{{smePopupTitle}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showManagePrfPopop"
+    [showCloseButton]="true">
+    <dx-validation-group #valPrfGroup>
+        <form (submit)="UpdatePRFMapping()">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="dx-fieldset">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="dx-field">
+                                    <div class="dx-field-label"> </div>
+                                    <div class="dx-field-value">
+                                        <dx-button class="btn btn-primary" text="{{createButtonTitle}}" (click)="CreatePRF()"></dx-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <div class="row"> 
+                    <div class="col-sm-12">
+                        <div class="dx-field">
+                            <perfect-scrollbar class="h-150px">
+                                <dx-data-grid  [(dataSource)]="DocumentTypePRFMappingData"   
+                                 [showRowLines]="false"  
+                                 showBorders='true'>                                   
+                                    <dxo-paging [enabled]="true"></dxo-paging>
+                                    <dxo-scrolling mode="infinite"></dxo-scrolling>                                                                        
+                                    <dxi-column   [visible]="false" dataField="docTypeDllMappingId" caption="Id" ></dxi-column>
+                                    <dxi-column   [visible]="false"  dataField="categoryName" caption="Industry" ></dxi-column>
+                                    <dxi-column   [visible]="false"  dataField="documentTypeName" caption="Function" ></dxi-column>
+                                    <dxi-column    dataField="fileName" caption="File Name"   ></dxi-column>
+                                    <dxi-column    dataField="versionNo" caption="Version"></dxi-column>
+                                    <dxi-column    dataField="uploadDate" caption="Create Date" dataType="date" format="MMM dd yyyy HH:mm"  ></dxi-column>
+                                    <dxi-column    dataField="mappedDate" caption="Mapped Date" dataType="date" format="MMM dd yyyy HH:mm"  ></dxi-column>
+                                    <dxi-column    dataField="name" caption="Maping" cellTemplate="PrfmapcommandTemplate"  ></dxi-column>
+                                    
+                                    <div *dxTemplate="let statusItem of 'PrfmapcommandTemplate'">
+                                     <span class="toggle">
+                                         <dx-switch #prfStatusRow [(value)]='statusItem.data.isMapped'
+                                             (click)="UpdatePRFMapStatus(prfStatusRow.value, statusItem.data)"></dx-switch>
+                                     </span>
+                                 </div>
+                                    </dx-data-grid>                            
+                            </perfect-scrollbar>
+                        </div>
+                    </div>
+                </div>                                         
+                    <div class="custom-popup-footer">
+                        <dx-button class="btn btn-secondary" text="Cancel" (click)="managePrfCancel()">
+                        </dx-button>
+                        <dx-button class="btn btn-primary" text="Save Mapping" [useSubmitBehavior]="true" [visible]="false"></dx-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </dx-validation-group>
+    <!-- Loader -->
+<div class="loader" *ngIf="showLoader"></div> 
+<!-- <div class="spinner-border text-muted" *ngIf="showLoader"></div> -->
+</dx-popup> 
+<!--Manage PRF Popup Code-->

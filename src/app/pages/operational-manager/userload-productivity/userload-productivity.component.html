@@ -1,0 +1,91 @@
+<div class="page-heading">
+    <h1>User Productivity</h1>    
+</div>
+
+<div class="position-relative">
+    <div class="datepicker">
+        <input type="text" ngxDaterangepickerMd [(ngModel)]="selected" 
+        [keepCalendarOpeningWithRange]="true" [showRangeLabelOnInput]="true" 
+        [timePicker]="true" startKey="start" endKey="end"  (rangeClicked)="ondataChange($event)"
+        (datesUpdated)="ondataChange($event)"
+        [ranges]="ranges" [alwaysShowCalendars]="true" class="form-control" id="userProductivityData"/>
+        <i class="icon-date-and-time"></i>
+    </div>
+</div>
+
+
+
+<div class="table-wrapper table-wrapper-card ">    
+
+         <dx-data-grid id="gridContainer" [(dataSource)]="listUserProductivityModel" [masterDetail]="{ enabled: true, template: 'detail' }" [showBorders]="true">
+        
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search record"></dxo-search-panel>
+        <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="userName" caption="User Name"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="docType" caption="Document Type"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="docSubType" caption="Document Sub Type"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="stages" caption="Stages"></dxi-column>
+       
+        <div class="nested-table" *dxTemplate="let employee of 'detail'">
+            <dx-data-grid 
+            [(dataSource)]="employee.data.listStageDetail"
+                [showBorders]="false"
+                [showColumnHeaders]="false">         
+               
+                     <div *dxTemplate="let stages of employee.data.listStageDetail">
+                                    
+                        <dxi-column dataField="userName"></dxi-column>                    
+                        <dxi-column dataField="docType"></dxi-column>
+                        <dxi-column dataField="docSubType"></dxi-column>
+                        <dxi-column dataField="level" visible="false"></dxi-column>
+                        <div class="d-flex justify-content-between">                               
+                            <span class="stage-detail">{{stages.data.stages}}</span>
+                            <!-- <span class="doc-per-hr" >{{stages.data.numberOfDocument }}</span>   -->
+                            
+                            <span class="doc-per-hr high-status-color">
+                          
+                            <b>{{stages.data.numberOfDocument}} </b></span>
+                            <!-- [ngClass]="(showFieldContent == 'ROI')? 'set-ps-content-100per':''" -->
+                               <!-- [ngClass]="(stages.data.level == 'Level3')?'high-status-color':
+                            (stages.data.level == 'Level2')?'medium-status-color':
+                            (stages.data.level == 'Level1')?'low-status-color':''
+                            "> -->
+                        </div>
+                    </div>  
+
+            </dx-data-grid> 
+        </div>     
+    </dx-data-grid>
+</div> 
+<!-- <div class="table-wrapper table-wrapper-card ">
+    <dx-data-grid id="gridContainer" [dataSource]="userProductivity" [masterDetail]="{ enabled: true, template: 'detail' }" keyExpr="ID" [showBorders]="true">
+        
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Users, documents"></dxo-search-panel>
+        <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="userName" caption="User Name"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="docType" caption="Document Type"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="docSubType" caption="Document Sub Type"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="stages" caption="Stages"></dxi-column>
+
+        <div class="nested-table" *dxTemplate="let employee of 'detail'">
+            <dx-data-grid 
+                [dataSource]="stageDetails"
+                [showBorders]="false"
+                [showColumnHeaders]="false">
+                    <dxi-column dataField="userEmpty"></dxi-column>
+                    <dxi-column dataField="docTypeEmpty"></dxi-column>
+                    <dxi-column dataField="docSubTypeEmpty"></dxi-column>
+                    <dxi-column dataField="stages" cellTemplate="stageTemplate"></dxi-column>
+                    <div *dxTemplate="let stages of 'stageTemplate'">
+                        <div class="d-flex justify-content-between">
+                            <span class="stage-detail">{{stages.data.stages}}</span>
+                            <span class="doc-per-hr">{{stages.data.hours}} docs/hr</span>
+                        </div>
+                    </div>
+            </dx-data-grid> 
+        </div>
+
+    </dx-data-grid>
+</div> -->

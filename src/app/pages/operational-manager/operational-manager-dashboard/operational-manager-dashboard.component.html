@@ -1,0 +1,492 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Operations Dashboard</h1>
+            <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                <div class="dx-field mr-3 mbb-10">
+                    <div class="dx-field-value">
+                        <dx-select-box id='selectboxdocumentType' [dataSource]="documentTypeList"
+                                       (onValueChanged)="OnDocumentTypeSelectionChange($event)" displayExpr="documentTypeName"
+                                       valueExpr="documentTypeId" placeholder="Select Type"></dx-select-box>
+                    </div>
+                </div>
+                <div class="dx-field mr-3 mbb-10">
+                    <div class="dx-field-value">
+                        <dx-select-box id='selectboxdocumentSubType' [dataSource]="documentSubTypeList"
+                                       displayExpr="documentSubTypeName" valueExpr="documentSubTypeId"
+                                       (onValueChanged)="OnDocumentSubTypeSelectionChange($event)"
+                                       placeholder="Select Subtype" [(value)]="defaultsubtype">
+                        </dx-select-box>
+                    </div>
+                </div>
+                <div class="dx-field mr-0 mbb-10">
+                    <div class="dx-field-value">
+                        <div class="datepicker">
+                            <input type="text" ngxDaterangepickerMd [(ngModel)]="selected"
+                                   [keepCalendarOpeningWithRange]="true" [showRangeLabelOnInput]="true"
+                                   [timePicker]="true" startKey="start" endKey="end" [ranges]="ranges"
+                                   [alwaysShowCalendars]="true" class="form-control"
+                                   (datesUpdated)="ondateChange($event)" />
+                            <i class="icon-date-and-time"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 ">
+        <div class="card plain-card mb-10" style="height: 270px;">
+            <div class="card-header">
+                <h5>Total documents</h5>
+                <dx-button text="View Details" (click)='redirectToDocumentMonitor()' class="btn btn-link sm-btn">
+                </dx-button>
+            </div>
+            <div class="card-body pt-0">
+                <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                    <div class="dx-field mb-0">
+                        <div class="dx-field-label">Opening balance</div>
+                        <div class="dx-field-value lg-value">{{docopeningBalance}}</div>
+                    </div>
+                    <div class="dx-field mb-0">
+                        <div class="dx-field-label">Received</div>
+                        <div class="dx-field-value lg-value">{{docReceived}}</div>
+                    </div>
+                </div>
+                <div class="charts mt-3">
+                    <dx-pie-chart id="totalDocuments" type="doughnut" [palette]="['#524591','#6c5cbe','#c4bee5']"
+                                  [dataSource]="totalDocumentList" (onPointClick)="pointClickHandler($event)">
+                        <!-- <dxo-export [enabled]="true"></dxo-export> -->
+                        <dxo-size [height]="120" [width]="270">
+                        </dxo-size>
+                        <dxo-legend [margin]="20" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+                        <dxi-series argumentField="document" valueField="documentCount">
+                            <!-- <dxo-label [visible]="true" position="columns">
+                                <dxo-font [size]="10"></dxo-font>
+                                <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                            </dxo-label> -->
+                            <dxo-hover-style color="#ffd700"></dxo-hover-style>
+                        </dxi-series>
+                    </dx-pie-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 ">
+        <div class="card plain-card mb-10" style="height: 270px;">
+            <div class="card-header">
+                <h5>Document type count</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                    <div class="dx-field mb-0">
+                        <div class="dx-field-value lg-value">{{totalDocumentType}}</div>
+                    </div>
+                </div>
+                <div class="charts mt-3">
+
+                    <dx-pie-chart id="documentTypeCount" type="doughnut" [palette]="['#524591','#6c5cbe','#c4bee5']"
+                                  [dataSource]="documentTypeCountList" (onPointClick)="pointdocumentTypeClickHandler($event)">
+                        <dxo-size [height]="170" [width]="260">
+                        </dxo-size>
+                        <!-- <dxo-legend [margin]="20" orientation="horizontal" horizontalAlignment="center"
+                            verticalAlignment="bottom" [columnCount]="4"></dxo-legend> -->
+                        <dxo-legend [margin]="20" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+                        <!-- <dxo-export [enabled]="true"></dxo-export>  -->
+                        <dxi-series argumentField="document" valueField="documentCount">
+                            <!-- <dxo-label [visible]="true" position="columns">
+                                <dxo-font [size]="10"></dxo-font>
+                                <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                            </dxo-label> -->
+                            <dxo-hover-style color="#ffd700"></dxo-hover-style>
+                        </dxi-series>
+                    </dx-pie-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card plain-card mb-10" style="height: 270px;">
+            <div class="card-header">
+                <h5>Stage wise user count</h5>
+            </div>
+            <perfect-scrollbar style="height:230px;">
+                <div class="card-body pt-0">
+                    <ul class="list-unstyled label-value-list">
+                        <li *ngFor="let item of documentAllocationList; let i = index" [attr.data-index]="i">
+                            <span class="label">{{item.documentType}}</span>
+                            <span class="value">{{item.documentCount}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+    <div class="col-sm-3 ">
+        <div class="card plain-card mb-10" style="height: 270px;">
+            <div class="card-header">
+                <h5>Users</h5>
+                <dx-button text="Allocate users" (click)='redirectToAllocateUsers()' class="btn btn-link sm-btn">
+                </dx-button>
+            </div>
+            <div class="card-body pt-0">
+                <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                    <div class="dx-field mb-0">
+                        <div class="dx-field-label">Active users</div>
+                        <div class="dx-field-value lg-value">{{userList.length}}</div>
+                    </div>
+                </div>
+                <perfect-scrollbar style="padding-right: 15px; height: 167px;">
+                    <ul class="list-unstyled label-value-list user-value-list">
+                        <li *ngFor="let item of userList">
+                            <span class="label">{{item.userName}}, </span>
+                            <span class="value-hint">{{item.roleName}}</span>
+                        </li>
+                    </ul>
+                </perfect-scrollbar>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-9">
+        <!--Table start-->
+        <div class="table-wrapper table-wrapper-card document-monitor-table">
+            <div class="card-header">
+                <div class="d-flex justify-content-start align-items-center">
+                    <dx-button *ngIf="showDetails" (click)="showDetailsRevert()" icon="arrowleft" class="back-btn">
+                    </dx-button>
+                    <h5 *ngIf="!showDetails">Document monitor</h5>
+                    <h5 *ngIf="showDetails">{{showDetails}}</h5>
+                </div>
+                <div *ngIf="!showDetails" class="d-flex justify-content-start align-items-center">
+                    <ul class="list-unstyled legend-list mr-3">
+                        <li class="risk-SLA">At risk of exceeding SLA</li>
+                                <li class="time-SLA">Time exceeding SLA</li>
+                    </ul>
+                    <dx-button text="View details" (click)="redirectToDocumentMonitor()" class="btn btn-link sm-btn">
+                    </dx-button>
+                </div>
+            </div>
+            <!-- Our design -->
+            <!-- <div class="card-body pt-0">
+                <dx-data-grid id="gridContainer" [(dataSource)]="dynamicdata" [masterDetail]="{ enabled: true, template: 'detail' }"
+                              keyExpr="KeyId" [showBorders]="true" [columnAutoWidth]="true" [customizeColumns]="customizeGridColumns">                     
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxo-sorting mode="none"></dxo-sorting>
+                    <div *dxTemplate="let document of 'detail'">
+
+                        <dx-data-grid [(dataSource)]="document.data.StageDetails" [showBorders]="true" [columnAutoWidth]="true"
+                                      [showColumnHeaders]="true" [showRowLines]="true" [showColumnLines]="true">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxi-column [allowSorting]="false" [allowHeaderFiltering]="true" dataField="documentHeaderID" caption="Document ID"
+                                        cellTemplate="docidTemplate" [width]="120"></dxi-column>
+                            <div *dxTemplate="let view of 'docidTemplate'; let itemIndex = index">
+                                <span class="btn-link" (click)='documentPopup(view.data.documentHeaderID)'
+                                      *ngIf="view.data.documentHeaderID != '0'">
+                                    {{view.data.documentHeaderID}}
+                                </span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="currentStage" caption="Current Stage" [width]="260">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="receivedDate" dataType="date" format="MMM dd yyyy HH:mm"
+                                        caption="Date Received" [width]="220"></dxi-column>
+                            <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="nextAction" caption="Next Action"
+                                        cellTemplate="actionTemplate" [width]="250"></dxi-column>
+                            <div *dxTemplate="let action of 'actionTemplate'; let itemIndex = index">
+                                <span class="btn-link"
+                                      (click)='redirectToNextAction(action.data.documentHeaderID,action.data.nextAction)'>{{action.data.nextAction}}</span>
+                            </div>
+                        </dx-data-grid>
+                    </div>
+                </dx-data-grid>
+            </div> -->
+            <!-- Our design End -->
+
+            <div class="card-body pt-0">
+                <div class="table-vertical-scroll">
+                    <div *ngIf='!showDetails'>
+                        <dx-data-grid [dataSource]="dynamicdata" [showRowLines]="false" showBorders='true'
+                            (onSelectionChanged)="onSelectionChanged($event)" [columnAutoWidth]="true">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxi-column [allowSorting]="false" dataField="Type" caption="Type"></dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="SubType" caption="Sub type"
+                                cellTemplate="docSubTypeTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let docSubType of 'docSubTypeTemplate';">
+                                <span (click)="showDetailsFun(docSubType.data.SubType)"
+                                    class="btn btnlink p-0">{{docSubType.data.SubType}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Downloaded" caption="Downloaded"
+                                cellTemplate="downloadedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let downloaded of 'downloadedTemplate';">
+                                <span class="{{downloaded.data.downloadedclass}}">{{downloaded.data.Downloaded}}</span>
+                            </div>
+            
+                            <dxi-column [allowSorting]="false" dataField="ReadyForPreprocessed" caption="Ready For Pre-processed"
+                                cellTemplate="readyforpreprocessTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let readypreprocess of 'readyforpreprocessTemplate';">
+                                <span
+                                    class="{{readypreprocess.data.ReadyForPreprocessedclass}}">{{readypreprocess.data.ReadyForPreprocessed}}</span>
+                            </div>
+            
+                            <dxi-column [allowSorting]="false" dataField="ClassIdentified" caption="Class Identified"
+                                cellTemplate="classIdentifiedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let classidentified of 'classIdentifiedTemplate';">
+                                <span
+                                    class="{{classidentified.data.ClassIdentifiedclass}}">{{classidentified.data.ClassIdentified}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Preprocessed" caption="Pre-processed"
+                                cellTemplate="preprocessedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let preprocessed of 'preprocessedTemplate';">
+                                <span class="{{preprocessed.data.Preprocessedclass}}">{{preprocessed.data.Preprocessed}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="OCRed" caption="OCR" cellTemplate="OCRedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let ocr of 'OCRedTemplate';">
+                                <span class="{{ocr.data.OCRedclass}}">{{ocr.data.OCRed}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="DocIdentified" caption="Doc Identified"
+                                cellTemplate="DocIdentifiedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let docidentified of 'DocIdentifiedTemplate';">
+                                <span class="{{docidentified.data.DocIdentifiedclass}}">{{docidentified.data.DocIdentified}}</span>
+                            </div>
+            
+                            <dxi-column [allowSorting]="false" dataField="Extracted" caption="Extracted"
+                                cellTemplate="ExtractedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let extracted of 'ExtractedTemplate';">
+                                <span class="{{extracted.data.Extractedclass}}">{{extracted.data.Extracted}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Failed" caption="Failed" cellTemplate="FailedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let failed of 'FailedTemplate';">
+                                <span class="{{failed.data.Failedclass}}">{{failed.data.Failed}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Completed" caption="Completed"
+                                cellTemplate="CompletedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let completed  of 'CompletedTemplate';">
+                                <span class="{{completed.data.Completedclass}}">{{completed.data.Completed}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="CompletedwithQC" caption="Completed with QC"
+                                cellTemplate="CompletedQcTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let completedqc  of 'CompletedQcTemplate';">
+                                <span class="{{completedqc.data.CompletedwithQCclass}}">{{completedqc.data.CompletedwithQC}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="CompletedwithVeto" caption="Completed with Veto"
+                                cellTemplate="CompletedwithVetoTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let completedveto  of 'CompletedwithVetoTemplate';">
+                                <span
+                                    class="{{completedveto.data.CompletedwithVetoclass}}">{{completedveto.data.CompletedwithVeto}}</span>
+                            </div>
+            
+                            <dxi-column [allowSorting]="false" dataField="Discarded" caption="Discarded"
+                                cellTemplate="DiscardedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let discarded  of 'DiscardedTemplate';">
+                                <span class="{{discarded.data.Discardedclass}}">{{discarded.data.Discarded}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="PendingwithVeto" caption="Pending with Veto"
+                                cellTemplate="PendingwithVetoTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let pendingwithVeto  of 'PendingwithVetoTemplate';">
+                                <span
+                                    class="{{pendingwithVeto.data.PendingwithVetoclass}}">{{pendingwithVeto.data.PendingwithVeto}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="AwaitingQC" caption="Awaiting QC"
+                                cellTemplate="AwaitingQCTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let awaitingQC  of 'AwaitingQCTemplate';">
+                                <span class="{{awaitingQC.data.AwaitingQCclass}}">{{awaitingQC.data.AwaitingQC}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Exported" caption="Exported"
+                                cellTemplate="ExportedTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let exported  of 'ExportedTemplate';">
+                                <span class="{{exported.data.Exportedclass}}">{{exported.data.Exported}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="AwaitingExport" caption="Awaiting Export"
+                                cellTemplate="AwaitingExportTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let awaitingExport  of 'AwaitingExportTemplate';">
+                                <span class="{{awaitingExport.data.AwaitingExportclass}}">{{awaitingExport.data.AwaitingExport}}</span>
+                            </div>
+                        </dx-data-grid>
+                    </div>
+                    <div *ngIf='showDetails'>
+                        <dx-data-grid [dataSource]="documentmonitorDetailsToShow" [showRowLines]="false" showBorders='true'
+                            (onSelectionChanged)="onSelectionChanged($event)">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+                            <dxi-column [allowSorting]="false" [allowHeaderFiltering]="true" dataField="DocumentHeaderID"
+                                caption="Document ID" cellTemplate="docidTemplate" [width]="120"></dxi-column>
+                            <div *dxTemplate="let view of 'docidTemplate'; let itemIndex = index">
+                                <span class="btn-link" (click)='documentPopup(view.data.DocumentHeaderID)'
+                                    *ngIf="view.data.DocumentHeaderID != '0'">
+                                    {{view.data.DocumentHeaderID}}
+                                </span>
+                            </div>
+                            <dxi-column [allowSorting]="false" [allowHeaderFiltering]="true" dataField="CurrentStage" caption="Current Stage">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="ReceivedDate" dataType="date" format="MMM dd yyyy HH:mm"
+                                caption="Date Received"></dxi-column>
+                            <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="NextAction"
+                                caption="Next Action" cellTemplate="actionTemplate"></dxi-column>
+                            <div *dxTemplate="let action of 'actionTemplate'; let itemIndex = index">
+                                <span class="btn-link"
+                                    (click)='redirectToNextAction(action.data.DocumentHeaderID,action.data.NextAction)'>{{action.data.NextAction}}</span>
+                            </div>
+                        </dx-data-grid>
+                    </div>
+                </div>
+            </div>
+            <!-- Yuj Design -->
+            <!-- <div class="card-body pt-0">
+                <div class="table-vertical-scroll">
+                    <div *ngIf='!showDetails'>
+                        <dx-data-grid [dataSource]="documentMonitor" [showRowLines]="false" showBorders='true'
+                            (onSelectionChanged)="onSelectionChanged($event)">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxi-column [allowSorting]="false" dataField="docType" caption="Document type"></dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="docSubType" caption="Document subtype"
+                                cellTemplate="docSubTypeTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let docSubType of 'docSubTypeTemplate';">
+                                <span (click)="showDetailsFun(docSubType.data.docSubType)"
+                                    class="btn btnlink p-0">{{docSubType.data.docSubType}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="preProcessor" caption="Pre-Processor"></dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="OCR" caption="OCR">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="splitterMerger" caption="Splitter-Merger"
+                                cellTemplate="splitterMergerTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let splitterMerger of 'splitterMergerTemplate';">
+                                <span class="risk-SLA-active">{{splitterMerger.data.splitterMerger}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected1">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected2">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected2">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected2">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="Rejected" caption="Rejected2">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="ManualEntry" caption="Manual entry"
+                                cellTemplate="ManualEntryTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let ManualEntry of 'ManualEntryTemplate';">
+                                <span class="time-SLA-active">{{ManualEntry.data.ManualEntry}}</span>
+                            </div>
+                        </dx-data-grid>
+                    </div>
+                    <div *ngIf='showDetails'>
+                        <dx-data-grid [dataSource]="documentMonitorDetails" [showRowLines]="false" showBorders='true'
+                            (onSelectionChanged)="onSelectionChanged($event)">
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            <dxi-column [allowSorting]="false" dataField="docId" caption="Document ID" cellTemplate="doc
+                                                    IdTemplate">
+                            </dxi-column>
+                            <div *dxTemplate="let docId of 'docIdTemplate';">
+                                <span class="btn btn-link p-0 display-inline">{{docId.data.docId}}</span>
+                            </div>
+                            <dxi-column [allowSorting]="false" dataField="currentStange" caption="Current Stange"></dxi-column>
+                            <dxi-column [allowSorting]="false" dataField="dateReceived" caption="Data Received"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Yuj Design End -->
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="tab-panel card plain-card">
+            <div class="card-header with-bg">
+                <h5>Alerts</h5>
+                <dx-button text="View all alerts" class="btn btn-link sm-btn"></dx-button>
+            </div>
+            <ul class="tab-panel-header ">
+                <li>
+                    <a class="p-0" [ngClass]="{'active': showTabContent == item}"
+                       (click)="activateTabContent(item); selectStatus(item.status)" *ngFor="let item of alerts">
+                        <div class='tab-status-indicator' [ngClass]="item.status">
+                            <span class="label-text">{{item.status}}</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-panel-body mt-0">
+                <perfect-scrollbar>
+                    <ul class="notification-list list-unstyled label-value-list" *ngFor="let item of alertsList">
+                        <li class="Medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="label">{{item.alertType}}</span>
+                                <span class="value-hint">{{item.alertTime}}</span>
+                            </div>
+                            <p>Document No : {{item.documentNo}} {{item.description}}</p>
+                            <!-- <dx-button class="btn btn-link p-0 sm-btn" text="Reallocate users"></dx-button> -->
+                        </li>
+                        <!-- <li class="Medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="label">Documents rejected</span>
+                                <span class="value-hint">12:34 PM</span>
+                            </div>
+                            <p>Queue 192.56.7.10 is not functional</p>
+                            <dx-button class="btn btn-link p-0 sm-btn" text="Reallocate users"></dx-button>
+                        </li>
+                        <li class="Low">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="label">Documents rejected</span>
+                                <span class="value-hint">12:34 PM</span>
+                            </div>
+                            <p>Manual intervention rate lower than usual</p>
+                            <dx-button class="btn btn-link p-0 sm-btn" text="Reallocate users"></dx-button>
+                        </li> -->
+                    </ul>
+                </perfect-scrollbar>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Forward popup starts -->
+<dx-popup class="custom-popup" [width]="1000" [showTitle]="true" [dragEnabled]="false"
+          [closeOnOutsideClick]="false" title="Document" [(visible)]="showDocumentPopup" [showCloseButton]="false">
+    <perfect-scrollbar class="h-100">
+        <div class="img-container">
+            <!-- <img class="object-fit-contain" src="assets/images/Document.png" /> -->
+            <div class="document-operations">
+                <div class="documentDivParent" id="documentDivParent">
+                </div>
+                <div class="thumbnailDivParent" id="thumbnailDivParent">
+                </div>
+            </div>
+        </div>
+    </perfect-scrollbar>
+    <dxi-item class="custom-popup-footer" dataField="">
+        <dx-button class="btn btn-primary" text="Ok" (onClick)="showDocumentPopup = false;clearObjectsBeforeClose()">
+        </dx-button>
+    </dxi-item>
+</dx-popup>
+<!-- Forward popup ends -->
+<!--Next Action Click popup starts-->
+<dx-popup class="custom-popup" [width]="400" [height]="200" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false" title="Cancel changes?" [(visible)]="CancelPopupVisible" [showCloseButton]="false">
+    <p>{{PopUpmessage}}</p>
+    <dxi-item class="custom-popup-footer" dataField="">
+        <dx-button class="btn btn-secondary" text="Cancel" (onClick)="CancelPopupVisible = false"></dx-button>
+        <dx-button class="btn btn-primary" text="Ok" (click)="redirectOnOKClick(DocumentID);" [(visible)]="OkButtonVisible"></dx-button>
+    </dxi-item>
+</dx-popup>
+<!--next action click popup ends-->

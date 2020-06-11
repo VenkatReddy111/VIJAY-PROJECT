@@ -1,0 +1,17 @@
+.img-26px{
+    width: 26px;
+}
+.section-label{
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+::ng-deep dx-button.active{
+    &:after{
+        content:'';
+        display: block;
+        width: 10px;
+        height:10px;
+        background: red;
+    }
+}

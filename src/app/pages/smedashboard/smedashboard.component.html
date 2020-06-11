@@ -1,0 +1,2196 @@
+<!--SME DASHBOARD: TOP ACTION BAR-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-fill top-action-bar d-flex flex-row justify-content-between align-items-center mbb-10">
+            <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                <div class="dx-field mb-0">
+                    <div class="dx-field-label">Industry</div>
+                    <div class="dx-field-value">{{selectedDocumentCategoryValue}}</div>
+                </div>
+                <div class="dx-field mb-0">
+                    <div class="dx-field-label">Function</div>
+                    <div class="dx-field-value">{{selectedDocumentTypeValue}}</div>
+                </div>
+                <div class="dx-field mb-0">
+                    <div class="dx-field-label">Document</div>
+                    <div class="dx-field-value">{{selectedDocumentSubtypeValue}}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--SME DASHBOARD: MIDDLE CONTENT-->
+
+<div class="row justify-content-center">
+
+    <div class="col-sm-4">
+        <div class="tab-panel">
+            <ul class="tab-panel-header">
+                <li>
+                    <a [tabIndex]='i+1' autofocus [ngClass]="{'active': showTabContent == item}"
+                        (focus)="activateTabContent(item)" (click)="activateTabContent(item)"
+                        *ngFor="let item of smeTabs; let i = index">
+                        <span class="label">{{item}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-panel-body">
+                <div *ngIf="showTabContent == 'Fields'">
+                    <div class="d-flex plr-20 mb-20 justify-content-between align-items-center">
+                        <!-- <span class="toggle ml-2">
+                            <dx-switch [value]=''></dx-switch>
+                        </span> -->
+                        <dx-button (click)="addNewField(0)" class="btn btn-primary ml-auto" text="Add field"
+                            *ngIf='Authorize.toAdd'>
+                        </dx-button>
+                    </div>
+
+
+
+                    <perfect-scrollbar style="padding:0px 20px; height: calc(100vh - 275px);">
+                        <!-- 27th Jan 2020 -->
+
+
+                        <dx-accordion id="fieldAccordion" class="remove-inner-overflow-hidden" #accordion
+                            [(dataSource)]="untabulatedFieldList" [collapsible]="false" [multiple]="false"
+                            [animationDuration]="300" [selectedItems]="" *ngIf="Authorize.toView">
+
+
+                            <div *dxTemplate="let company of 'title'; let i = index;">
+                                <div class="accordion-item-title" (click)="editField(company)">
+                                    {{company.fieldName}}<span *ngIf="company.isMandatory"
+                                        class="icon-asterisk">*</span></div>
+                                <div class="accordion-item-subtitle">{{company.fieldDataType}}</div>
+                                <span class="toggle ml-2">
+                                    <dx-switch #untableswitch [value]='company.isActive'
+                                        (click)="statuschangesSingleUnTabulatedFields(untableswitch,company )">
+                                    </dx-switch>
+                                </span>
+                            </div>
+                            <div *dxTemplate="let company of 'item'">
+                                <ul class="field-list  mb-1 full-space">
+                                    <li (click)="editOntologyFiled('Manditory',company)">
+                                        <i (mouseenter)="toggleDefault('icon-mandatory')"
+                                            (mouseleave)="toggleDefault('')" class="icon-mandatory position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-mandatory")?"show":"hidden"'>
+                                                <span class="text">Mandatory</span>
+                                            </div>
+                                        </i>
+                                    </li>
+                                    <li (click)="editOntologyFiled('Synonyms',company)">
+                                        <i (mouseenter)="toggleDefault('icon-synonym')" (mouseleave)="toggleDefault('')"
+                                            class="icon-synonym position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-synonym")?"show":"hidden"'>
+                                                <span class="text">Synonyms</span>
+                                            </div>
+                                        </i> </li>
+                                    <li (click)="editOntologyFiled('ROI',company)">
+                                        <i (mouseenter)="toggleDefault('icon-roi')" (mouseleave)="toggleDefault('')"
+                                            class="icon-roi position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-roi")?"show":"hidden"'>
+                                                <span class="text">ROI</span>
+                                            </div>
+                                        </i>
+                                    </li>
+                                    <li (click)="editOntologyFiled('Regular Expression',company)">
+                                        <i (mouseenter)="toggleDefault('icon-regular-expression')"
+                                            (mouseleave)="toggleDefault('')"
+                                            class="icon-regular-expression position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-regular-expression")?"show":"hidden"'>
+                                                <span class="text">Regular Expression</span>
+                                            </div>
+                                        </i> </li>
+                                    <li (click)="editOntologyFiled('Validations',company)">
+                                        <i (mouseenter)="toggleDefault('icon-validation')"
+                                            (mouseleave)="toggleDefault('')" class="icon-validation position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-validation")?"show":"hidden"'>
+                                                <span class="text">Validations</span>
+                                            </div>
+                                        </i>
+                                    </li>
+                                    <li (click)="editOntologyFiled('Custom',company)">
+                                        <i (mouseenter)="toggleDefault('icon-custom')" (mouseleave)="toggleDefault('')"
+                                            class="icon-custom position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-custom")?"show":"hidden"'>
+                                                <span class="text">Custom Validations</span>
+                                            </div>
+                                        </i>
+                                    </li>
+                                    <li (click)="editOntologyFiled('Extraction Sequence',company)">
+                                        <i (mouseenter)="toggleDefault('icon-extraction-sequence')"
+                                            (mouseleave)="toggleDefault('')"
+                                            class="icon-extraction-sequence position-relative">
+                                            <div class="icon-tooltip"
+                                                [ngClass]='(defaultVisible == "icon-extraction-sequence")?"show":"hidden"'>
+                                                <span class="text">Extraction Sequence</span>
+                                            </div>
+                                        </i> </li>
+                                </ul>
+                            </div>
+
+                        </dx-accordion>
+
+                    </perfect-scrollbar>
+
+
+                </div>
+                <div *ngIf="showTabContent == 'Tables'">
+                    <div class="d-flex plr-20 mb-20 justify-content-between align-items-center" *ngIf="!isShown">
+                        <dx-button class="btn btn-primary ml-auto" (click)="openAddTablePopup()" text="Add table"
+                            *ngIf="Authorize.toAdd">
+                        </dx-button>
+                    </div>
+
+                    <perfect-scrollbar *ngIf="!isShown">
+                        <div class="draggable-list">
+                            <dx-list class="draggable-item" [(dataSource)]="tabulatedFieldList"
+                                [repaintChangesOnly]="true" name="tablelist" id="tablelist" *ngIf="Authorize.toView">
+                                <dxo-item-dragging group="tasks" [data]="tabulatedFieldList" [allowReordering]="true"
+                                    [onDragStart]="onDragStarttabulatedFieldList" [onAdd]="onAddtabulatedFieldList"
+                                    [onReorder]="onReorder" [onRemove]="onRemovetabulatedFieldList">
+                                </dxo-item-dragging>
+
+                                <div *dxTemplate="let data of 'item'">
+
+                                    <div class="title d-flex align-items-center justify-content-between">
+                                        <!-- <a (click)="showTableDetails(data)">{{data.table}}</a> -->
+                                        <div class="position-relative">
+                                            <a (click)="showTableDetails(data)"
+                                                class="title hover-text hover-text-table" [innerHTML]="data.table"></a>
+                                            <div class="show-hover-text show-hover-table-text" [innerHTML]="data.table">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <dx-button icon="edit" class="btn btn-iconic" (click)="editTable(data)">
+                                            </dx-button>
+                                        </div>
+                                    </div>
+
+                                    <div class="columns">{{data.fields.length}} <span>Fields</span> </div>
+                                </div>
+                            </dx-list>
+                        </div>
+                    </perfect-scrollbar>
+                    <div *ngIf="isShown">
+                        <div class="d-flex plr-20 justify-content-start align-items-center mb-20">
+                            <dx-button (click)="showTableDetails()" icon="arrowleft" class="back-btn">
+                            </dx-button>
+                            <div class="position-relative">
+                                <span class="title hover-text back-btn-hover-text"
+                                    [innerHTML]="getselectedTableName()"></span>
+                                <div class="show-hover-text back-btn-show-hover-text"
+                                    [innerHTML]="getselectedTableName(1)"></div>
+                            </div>
+
+                            <div class="btn-links-group ml-auto">
+
+                                <button class="btn btn-tertiary" (click)="PrevTableDetails(this)"
+                                    [disabled]="tableprevButtonDisable">Prev</button>
+                                <button class="btn btn-tertiary border-0" (click)="NextTableDetails(this)"
+                                    [disabled]="tablenextButtonDisable">Next</button>
+                                <dx-button (click)="addNewField(1)" class="btn btn-primary ml-3" text="Add field"
+                                    *ngIf="Authorize.toAdd">
+                                </dx-button>
+                            </div>
+                        </div>
+
+
+
+                        <perfect-scrollbar style="padding:0px 20px; height: calc(100vh - 295px);">
+                            <!-- 27th Jan 2020 -->
+                            <dx-accordion class="remove-inner-overflow-hidden" #accordion [(dataSource)]="fieldTab"
+                                [collapsible]="false" [multiple]="false" [animationDuration]="300"
+                                [selectedItems]="getselectedFieldTab(fieldTab)" *ngIf="Authorize.toView">
+                                <div *dxTemplate="let company of 'title'">
+                                    <div class="accordion-item-title" (click)="editField(company)">{{company.fieldName}}
+                                        <span class="icon-asterisk">*</span></div>
+                                    <div class="accordion-item-subtitle">{{company.fieldDataType}}</div>
+                                    <span class="toggle ml-2">
+                                        <dx-switch #rowjobstatus [value]='company.isActive'
+                                            (click)="statuschangesSingleField(rowjobstatus ,company)"></dx-switch>
+                                    </span>
+                                </div>
+                                <div *dxTemplate="let company of 'item'">
+                                    <ul class="field-list mb-1 full-space">
+                                        <li (click)="editOntologyFiled('Manditory',company)">
+                                            <i (mouseenter)="toggleDefault('icon-mandatory')"
+                                                (mouseleave)="toggleDefault('')"
+                                                class="icon-mandatory position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-mandatory")?"show":"hidden"'>
+                                                    <span class="text">Mandatory</span>
+                                                </div>
+                                            </i>
+                                        </li>
+                                        <li (click)="editOntologyFiled('Synonyms',company)">
+                                            <i (mouseenter)="toggleDefault('icon-synonym')"
+                                                (mouseleave)="toggleDefault('')" class="icon-synonym position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-synonym")?"show":"hidden"'>
+                                                    <span class="text">Synonyms</span>
+                                                </div>
+                                            </i>
+                                        </li>
+                                        <li (click)="editOntologyFiled('ROI',company)">
+                                            <i (mouseenter)="toggleDefault('icon-roi')" (mouseleave)="toggleDefault('')"
+                                                class="icon-roi position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-roi")?"show":"hidden"'>
+                                                    <span class="text">ROI</span>
+                                                </div>
+                                            </i>
+                                        </li>
+                                        <li (click)="editOntologyFiled('Regular Expression',company)">
+                                            <i (mouseenter)="toggleDefault('icon-regular-expression')"
+                                                (mouseleave)="toggleDefault('')"
+                                                class="icon-regular-expression position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-regular-expression")?"show":"hidden"'>
+                                                    <span class="text">Regular Expression</span>
+                                                </div>
+                                            </i> </li>
+                                        <li (click)="editOntologyFiled('Validations',company)">
+                                            <i (mouseenter)="toggleDefault('icon-validation')"
+                                                (mouseleave)="toggleDefault('')"
+                                                class="icon-validation position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-validation")?"show":"hidden"'>
+                                                    <span class="text">Validations</span>
+                                                </div>
+                                            </i> </li>
+                                        <li (click)="editOntologyFiled('Custom',company)">
+                                            <i (mouseenter)="toggleDefault('icon-custom')"
+                                                (mouseleave)="toggleDefault('')" class="icon-custom position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-custom")?"show":"hidden"'>
+                                                    <span class="text">Custom</span>
+                                                </div>
+                                            </i>
+
+                                        </li>
+                                        <li (click)="editOntologyFiled('Extraction Sequence',company)">
+                                            <i (mouseenter)="toggleDefault('icon-extraction-sequence')"
+                                                (mouseleave)="toggleDefault('')"
+                                                class="icon-extraction-sequence position-relative">
+                                                <div class="icon-tooltip"
+                                                    [ngClass]='(defaultVisible == "icon-extraction-sequence")?"show":"hidden"'>
+                                                    <span class="text">Extraction Sequence</span>
+                                                </div>
+                                            </i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </dx-accordion>
+                        </perfect-scrollbar>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-8">
+        <div class="drag-drop-card">
+            <div class="drag-drop-card-header d-flex justify-content-between align-items-center">
+                <!-- <button class="btn btn-secondary"> Upload sample document</button> -->
+                <div class="doc-file-uploader sme-uploader">
+                    <dx-file-uploader #fileUploaderProfileImage selectButtonText="Upload sample document" labelText=""
+                        [(value)]="value" [uploadFailedMessage]="uploadedmsg" [uploadedMessage]="uploadedmsg"
+                        [allowedFileExtensions]="['.jpg','.jpeg','.gif','.png', '.fpx', '.tif', '.tiff', '.psd' , '.eps','.ai','.pdf']"
+                        uploadMode="instantly" invalidFileExtensionMessage="Please select an image or pdf file only"
+                        [multiple]="false" (onValueChanged)="uploadProfileImage($event)">
+                    </dx-file-uploader>
+                </div>
+
+                <div class="btn-group" role="group">
+                    <button tabindex="{{lsCount+4+i}}" (focus)="toggleDefault(item.btnName)" type="button"
+                        class="btn btn-operator h-30" (mouseenter)="toggleDefault(item.btnName)"
+                        (mouseleave)="toggleDefault('')" [ngClass]="{'active': selectedButton == item.btnName}"
+                        (click)="activateButton(item);"
+                        *ngFor="let item of documentButtonActionsSubtype ; let i = index"><i class="{{item.icon}}"></i>
+                        <div class="btn-tooltip" [ngClass]='(defaultVisible == item.btnName)?"show":"hidden"'>
+                            {{defaultVisible}}
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="drag-drop-card-body" id="subtypeimageviewer">
+                <span *ngIf="documentImageVirtualRootPathROI == '' || documentImageVirtualRootPathROI == null || 
+        documentImageVirtualRootPathROI == undefined" class="d-flex justify-content-center align-items-center">Document
+                    view will appear here</span>
+
+
+                <div class="document-operations"
+                    *ngIf="documentImageVirtualRootPathROI != '' && documentImageVirtualRootPathROI != null && documentImageVirtualRootPathROI != undefined">
+                    <div class="documentDivParent" id="documentDivParentSubtype">
+                    </div>
+                    <div class="thumbnailDivParent" id="thumbnailDivParentSubtype">
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<dx-popup class="lg-popup" [showTitle]="true" title="{{smePopupTitle}}" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [showCloseButton]="false" [(visible)]="popupVisible">
+
+    <dx-validation-group #valOntology>
+        <form class="h-100-per" action="your-action" (submit)="onFormSubmit($event)">
+            <div class="row h-100-per">
+                <div class="col-sm-4 h-100-per t--20 pt-20 pr-20">
+                    <perfect-scrollbar #perfectScroll style="padding:0px 20px;"
+                    [scrollIndicators]="true" >
+                    <!-- <perfect-scrollbar 
+                    #perfectScroll  
+                    *ngIf="type === 'component'"             
+                    [config]="config" 
+                    [scrollIndicators]="true" 
+                    style="padding:0px 20px;"> -->
+                        <div class="dx-fieldset">
+                            <div class="dx-field">
+                                <div class="dx-field-label" title="Field name for system">Field name<span
+                                        class="icon-asterisk">*</span> (for the system use)</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box [(value)]="documentfieldmodel.fieldName">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Field Name cannot be blank">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label" title="Field name for user">Field Name<span
+                                        class="icon-asterisk">*</span> (for display to the user)</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box [(value)]="documentfieldmodel.displayName">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Display Name cannot be blank">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+
+                            <div class="dx-field">
+                                <div class="dx-field-label" title="Field data type">Field data type<span
+                                        class="icon-asterisk">*</span></div>
+                                <div class="dx-field-value">
+                                    <dx-select-box [items]="fielddatatypelist"
+                                        [(value)]="documentfieldmodel.fieldDataTypeID"
+                                        placeholder="Select Field data type" displayExpr="dataType" valueExpr="id"
+                                        [showClearButton]="true" isRequired="true">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-select-box>
+                                </div>
+                            </div>
+
+                            <div class="dx-field dx-field-horizontal">
+                                <div class="field-group field-horizontal">
+                                    <div class="dx-field-label" title="Mins Length">Min Length</div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box   [showSpinButtons]="true" [(value)]="documentfieldmodel.minLength"
+                                        [showClearButton]="false" [min]="1" [max]="1000" >
+                        
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Min Length">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                        
+                                    </dx-number-box>
+                                    </div>
+                                </div>
+                                <div class="field-group field-horizontal">
+                                    <div class="dx-field-label" title="Max Length">Max Length
+                                    </div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box   [showSpinButtons]="true"  [(value)]="documentfieldmodel.maxLength"
+                                        [showClearButton]="false" [min]="1" [max]="1000">
+                        
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Max Length">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                        
+                                    </dx-number-box>
+                                    </div>
+                                </div>
+                                <!-- <div class="field-group field-horizontal" *ngIf="ShowAnchor=='Show'">
+                                    <div class="dx-field-label" title="Anchor">Anchor</div>
+                                    <div class="dx-field-value">
+                                        <span class="toggle">
+                                            <dx-switch [(value)]="documentfieldmodel.isAnchor"></dx-switch>
+                                        </span>
+                                    </div>
+                                </div> -->
+                            </div>
+
+                            <div class="dx-field">
+                                <div class="dx-field-label" title="Source Type">Source Type<span
+                                        class="icon-asterisk">*</span></div>
+                                <div class="dx-field-value">
+                                    <dx-select-box [items]="Zone_Type" [(value)]="documentfieldmodel.zoneType"
+                                        placeholder="Select zone type" displayExpr="name" valueExpr="zoneTypeId"
+                                        [showClearButton]="true" isRequired="true">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Select zone type">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="dx-field dx-field-horizontal">
+                                <div class="field-group field-horizontal">
+                                    <div class="dx-field-label" title="Mandatory">Mandatory</div>
+                                    <div class="dx-field-value">
+                                        <span class="toggle">
+                                            <dx-switch [(value)]="documentfieldmodel.isMandatory"></dx-switch>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="field-group field-horizontal">
+                                    <div class="dx-field-label" title="Editable">Editable
+                                    </div>
+                                    <div class="dx-field-value">
+                                        <span class="toggle">
+                                            <dx-switch [(value)]="documentfieldmodel.editable"></dx-switch>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- <div class="field-group field-horizontal" *ngIf="ShowAnchor=='Show'">
+                                    <div class="dx-field-label" title="Anchor">Anchor</div>
+                                    <div class="dx-field-value">
+                                        <span class="toggle">
+                                            <dx-switch [(value)]="documentfieldmodel.isAnchor"></dx-switch>
+                                        </span>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <!-- <div class="dx-field" *ngIf="documentfieldmodel.isAnchor">
+                                <div class="dx-field-label" title="Anchor value">Anchor value</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box [(value)]="roiParameters.anchorValue"></dx-text-box>
+                                </div>
+                            </div> -->
+                            <!-- <div class="dx-field dx-field-horizontal">
+                            <div class="field-group field-horizontal">
+                                <div class="dx-field-label">IsTabularField</div>
+                                <div class="dx-field-value">
+                                    <span class="toggle">
+                                        <dx-switch [(value)]="documentfieldmodel.isTabularField"></dx-switch>
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div> -->
+
+                            <div class="dx-field">
+                                <div class="dx-field-label" title="Description">Description</div>
+                                <div class="dx-field-value">
+                                    <dx-text-area [(value)]="documentfieldmodel.fielddescription"></dx-text-area>
+                                </div>
+                            </div>
+
+                            <div class="dx-field dx-field-horizontal">
+                                <!-- <li [ngClass]="(getCategory == 'ROI' || showFieldContent == 'ROI')?'active':''"
+                                (click)="activateContent('ROI')"> -->
+                                
+                                <span class="icon">
+                                    <!-- <dx-button icon="chevronright"></dx-button> -->
+                                    <dx-button class="btn btn-primary btn-iconic" icon="plus" *ngIf="!isOpened" (click)='activateAdvanceOptions(true)'>
+                                    </dx-button>
+                                    <dx-button class="btn btn-primary btn-iconic" icon="minus" *ngIf="isOpened" (click)='activateAdvanceOptions(false)'>
+                                    </dx-button>
+                                </span>
+                                <span class="text">&nbsp;<b>Advance Options</b></span>
+                                <span> </span>
+                            <!-- </li> -->
+                            </div>
+                            <div class="dx-field" *ngIf="isOpened">
+                                <div class="dx-field dx-field-horizontal">
+                                    <div class="field-group field-horizontal">
+                                        <div class="dx-field-label" title="Select if you want to mark it is an anchor field">Anchor</div>
+                                        <div class="dx-field-value">
+                                            <span class="toggle">
+                                                <dx-switch [(value)]="documentfieldmodel.isAnchor"></dx-switch>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="documentfieldmodel.isAnchor">
+                                    <div class="dx-field-label" title="Anchor value">Anchor value</div>
+                                    <div class="dx-field-value">
+                                        <dx-text-box [(value)]="roiParameters.anchorValue"></dx-text-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label" title="Select list if the field is dropdown">Field Display Mode<span class="icon-asterisk">*</span>
+                                    </div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box [items]="Field_DisplayMode" [(value)]="documentfieldmodel.fieldDisplayMode"
+                                            placeholder="Select Field Display Mode" displayExpr="name" valueExpr="fieldDisplayModeId"
+                                            [showClearButton]="true" isRequired="true" (onValueChanged)="Field_DisplayModeChanged($event)">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="FieldlistDropdown=='List'">
+                                    <div class="dx-field-label" title="Master Field List">Master Field List <span class="icon-asterisk">*</span>
+                                    </div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box [items]="MasterTableFieldList" [(value)]="documentfieldmodel.masterTableFieldId"
+                                            placeholder="Select Master Field" displayExpr="masterTableName" valueExpr="masterTableId"
+                                            [showClearButton]="true" isRequired="true">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label" title="Probable location on a page">Probable location on a
+                                        page<span class="icon-asterisk">*</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box [items]="Filed_Location" [(value)]="documentfieldmodel.filedLocation"
+                                            placeholder="Select field location" displayExpr="name" valueExpr="filedLocationId"
+                                            [showClearButton]="true" isRequired="true">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="ShowConfLevel=='Show'">
+                                    <div class="dx-field-label" title="Confidence Level">Confidence Level<span class="icon-asterisk">*</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box format="0.00" [showSpinButtons]="true" [(value)]="documentfieldmodel.confidenceLevel"
+                                            [showClearButton]="false" [min]="1" [max]="9">
+                            
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Confidence level cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                            
+                                        </dx-number-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label" title="Select multiple words if field consists of multiple words">Field Structure<span class="icon-asterisk">*</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box [items]="Field_Structure" [(value)]="documentfieldmodel.fieldStructure"
+                                            placeholder="Select filed structure" displayExpr="name" valueExpr="fieldStructureId"
+                                            [showClearButton]="true" isRequired="true">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="ShowCriticalLevel=='Show'">
+                                    <div class="dx-field-label" title="Critical Level (0-90)">Critical Level (0-90)<span
+                                            class="icon-asterisk">*</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box [showSpinButtons]="true" [(value)]="documentfieldmodel.criticallevel"
+                                            [showClearButton]="false" [min]="0" [max]="90">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Critical level cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                                        <!-- <dx-text-box [(value)]="documentfieldmodel.criticallevel" >
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required" message="Critical level cannot be blank">
+                                                                    </dxi-validation-rule>
+                                                                
+                                                                </dx-validator>
+                                                            </dx-text-box> -->
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label" title="Remove the value if the confidence level is below the threshold">
+                                        Remove value if the confidence level is (0-90) <span class="text" style="font-size:medium"><b><=</b></span><span class="icon-asterisk">
+                                            *</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box [showSpinButtons]="true" [(value)]="documentfieldmodel.minConfForBlankOut"
+                                            [showClearButton]="false" [min]="0" [max]="90">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Remove value if the confidence level is <= cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                            
+                            
+                                        <!-- <dx-text-box [(value)]="documentfieldmodel.minConfForBlankOut" >
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required" message="MinConfForBlankOut cannot be blank">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                            </dx-text-box>   -->
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label" title="Highlight  the low confidence character(s) in color">Highlight character
+                                        if its confidence level is (0-9) <span class="text" style="font-size:medium"><b><=</b></span> <span class="icon-asterisk"> *</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box format="0" [showSpinButtons]="true" [(value)]="documentfieldmodel.minConfForColor"
+                                            [showClearButton]="false" [min]="0" [max]="9">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Highlight character if its confidence level is <= cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                            
+                            
+                                        <!-- <dx-text-box [(value)]="documentfieldmodel.minConfForColor">
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required" message="MinConfForColor cannot be blank">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                            </dx-text-box> -->
+                                    </div>
+                                </div>
+                                <div class="dx-field dx-field-horizontal">
+                                    <!-- <div class="field-group field-horizontal">
+                                                            <div class="dx-field-label"  title="Editable">Editable
+                                                            </div>
+                                                            <div class="dx-field-value">
+                                                                <span class="toggle">
+                                                                    <dx-switch [(value)]="documentfieldmodel.editable"></dx-switch>
+                                                                </span>
+                                                            </div>
+                                                        </div> -->
+                                    <div class="field-group field-horizontal">
+                                        <div class="dx-field-label" title="Select if you want to make the review compulsory">Stop for review
+                                        </div>
+                                        <div class="dx-field-value">
+                                            <span class="toggle">
+                                                <dx-switch [(value)]="documentfieldmodel.confirmBaseOnConfLevel"
+                                                    (click)="Isactiveorinactive(documentfieldmodel.confirmBaseOnConfLevel)">
+                                                </dx-switch>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="documentfieldmodel.confirmBaseOnConfLevel">
+                                    <div class="dx-field-label" title="Show for review if the confidence level is below the threshold">If field-level confidence (0-90) <span class="text" style="font-size:medium"><b><=</b></span>
+                                            <span class="icon-asterisk"> *</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box [(value)]="documentfieldmodel.fieldLevelConf" [showSpinButtons]="true" [min]="0" [max]="90">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Field Level Conf. cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field" *ngIf="documentfieldmodel.confirmBaseOnConfLevel">
+                                    <div class="dx-field-label" title="Show for review if the confidence level is below the threshold">If character level confidence
+                                        (0-9) <span class="text" style="font-size:medium"><b><=</b></span> <span class="icon-asterisk"> *</span></div>
+                                    <div class="dx-field-value">
+                                        <dx-number-box [(value)]="documentfieldmodel.charLevelConf" format="0" [showSpinButtons]="true" [min]="0"
+                                            [max]="9">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Char Level Confidence cannot be blank">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label"></div>
+                                <div class="dx-field-value">
+                                    <!-- <dx-text-box [(value)]=""></dx-text-box> -->
+                                </div>
+                            </div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+                <div class="col-sm-3 h-100-per t--20 pt-20 p-0 border-left border-right">
+                    <perfect-scrollbar>
+                        <ul class="tab-list pb-3">
+                            <li [ngClass]="{'active' : (getCategory == 'Synonyms' || showFieldContent == 'Synonyms' )
+                                                , 'found-error' : (synonymstaberror == true) }"
+                                (click)="activateContent('Synonyms')">
+                                <span class="text">Synonyms</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li>
+                            <li [ngClass]="{'active' : (getCategory == 'Locate' || showFieldContent == 'Locate')
+                            , 'found-error' : (customstaberror == true) }" (click)="activateContent('Locate')">
+                                    <span class="text">Locate</span>
+                                    <span class="icon">
+                                        <dx-button icon="chevronright"></dx-button>
+                                    </span>
+                                </li>
+                                <li [ngClass]="{'active' : (getCategory == 'AutoCorrect' || showFieldContent == 'AutoCorrect')
+                                , 'found-error' : (customstaberror == true) }" (click)="activateContent('AutoCorrect')">
+                                        <span class="text">Auto Correct</span>
+                                        <span class="icon">
+                                            <dx-button icon="chevronright"></dx-button>
+                                        </span>
+                                    </li>
+                            <li [ngClass]="{'active' : (getCategory == 'Validations' || showFieldContent == 'Validations')
+                                                , 'found-error' : (validationstaberror == true) }"
+                                (click)="activateContent('Validations')">
+                                <span class="text">Validations</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li>
+                            <li [ngClass]="{'active' : (getCategory == 'Review' || showFieldContent == 'Review')
+                            , 'found-error' : (customstaberror == true) }" (click)="activateContent('Review')">
+                                    <span class="text">Review</span>
+                                    <span class="icon">
+                                        <dx-button icon="chevronright"></dx-button>
+                                    </span>
+                                </li>
+                                <li [ngClass]="{'active' : (getCategory == 'ReformatField' || showFieldContent == 'ReformatField')
+                                , 'found-error' : (customstaberror == true) }" (click)="activateContent('ReformatField')">
+                                        <span class="text">Reformat</span>
+                                        <span class="icon">
+                                            <dx-button icon="chevronright"></dx-button>
+                                        </span>
+                                    </li>                                                                           
+                            <li [ngClass]="{'active' : (getCategory == 'Custom' || showFieldContent == 'Custom')
+                                                    , 'found-error' : (customstaberror == true) }" (click)="activateContent('Custom')">
+                                <span class="text">Intra Field Validations</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li>
+
+
+                            <!-- <li [ngClass]="{'active' : (getCategory == 'Regular Expression' || showFieldContent == 'Regular Expression')
+                        , 'found-error' : (regularExpressiontaberror == true) }"
+                                (click)="activateContent('Regular Expression')">
+                                <span class="text">Regular Expression</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li> -->
+
+                            <!-- <li [ngClass]="{'active' : (getCategory == 'Extraction Sequence' || showFieldContent == 'Extraction Sequence'), 'found-error' : (extractionSequencetaberror == true) }"
+                                (click)="activateContent('Extraction Sequence')">
+                                <span class="text">Extraction Sequence</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li> -->
+
+                            <!-- <li [ngClass]="(getCategory == 'ROI' || showFieldContent == 'ROI')?'active':''"
+                                (click)="activateContent('ROI')">
+                                <span class="text">Region Of Interest</span>
+                                <span class="icon">
+                                    <dx-button icon="chevronright"></dx-button>
+                                </span>
+                            </li> -->
+
+
+
+                        </ul>
+                    </perfect-scrollbar>
+                </div>
+                <div class="col-sm-5 h-100-per t--20 pt-20 pl-20">
+                    <div [ngClass]="(showFieldContent == 'ROI')? 'set-ps-content-100per':''">
+                        <div class="row" *ngIf="showFieldContent == 'Synonyms'">
+
+                            <div class="col-sm-7">
+                                <div class="dx-fieldset">
+                                    <div class="dx-field">
+                                        <div class="field-group field-horizontal">
+
+                                            <div class="dx-field-value mr-2"
+                                                [ngClass]="(getSynonymsArray?.length> 0)? 'ml-0' : 'ml-0'">
+
+                                                <dx-text-box [(value)]="synonymmodel.synonym" placeholder="Add synonym"
+                                                    (onKeyPress)='onEnterKeySynonymAdd($event)'>
+                                                    <dx-validator>
+                                                        <dxi-validation-rule type="custom"
+                                                            message="Synonyms length cannot be greater than 400 characters"
+                                                            [validationCallback]="validateSynonymsValue">
+                                                        </dxi-validation-rule>
+                                                    </dx-validator>
+                                                </dx-text-box>
+
+                                            </div>
+                                            <dx-button class="btn btn-primary btn-iconic" icon="plus"
+                                                (click)='createSynonyms(synonymmodel,documentfieldmodel)'>
+                                                <!-- custom validation put here to check duplicate -->
+
+                                            </dx-button>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <perfect-scrollbar style=" height: calc(100vh - 318px);">
+                                    <dx-list class="draggable-item appended-list" [(items)]="getSynonymsArray"
+                                        name="synonym" id="synonym" [repaintChangesOnly]="true" [searchEnabled]="false"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [(data)]="getSynonymsArray"
+                                            [allowReordering]="true" [onDragStart]="onDragStart" [onReorder]="onReorder"
+                                            [onAdd]="onAddSynonymsArray" [onRemove]="onRemoveSynonymsArray">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index;">
+                                            <div class="dx-fieldset mb-0">
+                                                <div class="dx-field mb-0">
+                                                    <div class="field-group field-horizontal">
+                                                        <!-- <span class="mr-3">{{i + 1}}.</span>
+                                                        <span class="mr-3"></span> -->
+                                                        <div class="dx-field-value mr-2">
+                                                            <dx-text-box [(value)]="data.synonym"
+                                                                (onBlur)="validateSummaryValue(data)"></dx-text-box>
+                                                        </div>
+                                                        <dx-button class="btn btn-secondary btn-iconic"
+                                                            (click)='deleteSynonyms(getSynonymsArray,data,i)'
+                                                            icon="close">
+                                                        </dx-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </dx-list>
+                                </perfect-scrollbar>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'Validations'">
+
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultValidations" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultValidations"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultValidations" [onRemove]="onRemovedefaultValidations">
+                                        </dxo-item-dragging>
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count">
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters }}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Validations added (<span
+                                        [(innerHTML)]='selectedValidations.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedValidations" id="selectValidation"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedValidations"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedValidations" [onRemove]="onRemoveselectedValidations"
+                                            [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedValidation(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <!--<div class="position-relative">
+                                                <span class="title hover-text" [innerHTML]="getselectedTableName()"></span>
+                                                <div class="show-hover-text" [innerHTML]="getselectedTableName()"></div>
+                                            </div>-->
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i'>
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters}}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterInfo != null && data.fieldRuleValidation.parameterInfo != ""'>
+                                                <div class="dx-fieldset ">
+                                                    <div class="dx-field"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters ).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationparamtername(i, data.fieldRuleValidation.parameterInfo)}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='T'">
+                                                           
+                                                            <dx-text-box
+                                                            (onValueChanged)="changevalidationParamterValue(i, data,$event,'T')"
+                                                                [value]="getvalidationparametervalue(data, i )">
+                                                              <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="custom"
+                                                                        message="Parameter value is required"
+                                                                        [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                             </div>
+                                                            </dx-text-box>
+                                                       
+                                                            <!-- (onValueChanged)="changevalidationParamterValue(i+1, data,$event)" [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='D'">
+                                                            <dx-select-box [dataSource]="controlvaluessource" [value]="getvalidationparametervalue(data, i )"
+                                                                displayExpr="ValueDisplay" (onValueChanged)="changevalidationParamterValue(i, data,$event,'D')"
+                                                                valueExpr="ValueDisplay" [showClearButton]="true">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-select-box>
+                                                            <!-- <dx-select-box [dataSource]="controlvaluessourceTest"  
+                                                                displayExpr="ValueDisplay" 
+                                                                valueExpr="ValueId" [showClearButton]="true">                                                            
+                                                            </dx-select-box>                                                              -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='DB'">
+                                                            <dx-select-box  [items]="DbSource" [value]="getvalidationparametervalue(data, i )"  displayExpr="dbname"
+                                                            (onValueChanged)="changevalidationParamterValue(i, data,$event,'DB')"  valueExpr="validationDbId" 
+                                                            >
+                                                        </dx-select-box>
+                                                                                                                   
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='TBL'">
+                                                            
+                                                            <dx-select-box  [items]="TblSource" [value]="getvalidationparametervalue(data, i )"  displayExpr="tableName"
+                                                                   (onValueChanged)="changevalidationParamterValue(i, data,$event,'TBL')"  valueExpr="validationTableId" 
+                                                                   >
+                                                               </dx-select-box>
+                                                          
+                                                           </div>
+                                                           <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='SB'">
+                                                            
+                                                            <dx-select-box  [items]="Tblcolumn" [value]="getvalidationparametervalue(data, i )"  displayExpr="columnName"
+                                                                   (onValueChanged)="changevalidationParamterValue(i, data,$event,'SB')"  valueExpr="columnName" 
+                                                                   >
+                                                               </dx-select-box>
+                                                          
+                                                           </div>
+                                                           <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='MW'">
+                                                            
+                                                            <dx-select-box  [items]="Tblcolumn" [value]="getvalidationparametervalue(data, i )"  displayExpr="columnName"
+                                                                   (onValueChanged)="changevalidationParamterValue(i, data,$event,'MW')"  valueExpr="columnName" 
+                                                                   >
+                                                               </dx-select-box>
+                                                          
+                                                           </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'AutoCorrect'">
+
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlistAuto class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultAutoCorrect" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasksAutoCorrect" [data]="defaultAutoCorrect"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultAutoCorrect" [onRemove]="onRemovedefaultAutoCorrect">
+                                        </dxo-item-dragging>
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count">
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters }}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Auto correct added (<span
+                                        [(innerHTML)]='selectedAutoCorrect.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedAutoCorrect" id="selectedAutoCorrect"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasksAutoCorrect" [data]="selectedAutoCorrect"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedAutoCorrect" [onRemove]="onRemoveselectedAutoCorrect"
+                                            [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedAutoCorrect(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <!--<div class="position-relative">
+                                                <span class="title hover-text" [innerHTML]="getselectedTableName()"></span>
+                                                <div class="show-hover-text" [innerHTML]="getselectedTableName()"></div>
+                                            </div>-->
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i'>
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters}}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterInfo != null && data.fieldRuleValidation.parameterInfo != ""'>
+                                                <div class="dx-fieldset ">
+                                                    <div class="dx-field"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters ).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationparamtername(i, data.fieldRuleValidation.parameterInfo)}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='T'">
+                                                           
+                                                            <dx-text-box (onValueChanged)="changeAutoCorrectParamterValue(i, data,$event,'T')"
+                                                                [value]="getvalidationparametervalue(data , i )">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-text-box>
+                                                       
+                                                            <!-- (onValueChanged)="changevalidationParamterValue(i+1, data,$event)" [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='D'">
+                                                            <dx-select-box [dataSource]="controlvaluessource" [value]="getvalidationparametervalue(data , i )" #drpDocCat
+                                                                displayExpr="ValueDisplay" (onValueChanged)="changeAutoCorrectParamterValue(i, data,$event,'D')"
+                                                                valueExpr="ValueDisplay" [showClearButton]="true">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-select-box>
+                                                       
+                                                            <!-- [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'ReformatField'">
+
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultReformat" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultReformat"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultReformat" [onRemove]="onRemovedefaultReformat">
+                                        </dxo-item-dragging>
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count">
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters }}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Reformat added (<span
+                                        [(innerHTML)]='selectedReformat.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedReformat" id="selectedReformat"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedReformat"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedReformat" [onRemove]="onRemoveselectedReformat"
+                                            [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedReformat(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <!--<div class="position-relative">
+                                                <span class="title hover-text" [innerHTML]="getselectedTableName()"></span>
+                                                <div class="show-hover-text" [innerHTML]="getselectedTableName()"></div>
+                                            </div>-->
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i'>
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters}}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterInfo != null && data.fieldRuleValidation.parameterInfo != ""'>
+                                                <div class="dx-fieldset ">
+                                                    <div class="dx-field"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters ).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationparamtername(i, data.fieldRuleValidation.parameterInfo)}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='T'">
+                                                           
+                                                            <dx-text-box
+                                                            (onValueChanged)="changeRefomatParamterValue(i, data,$event,'T')"
+                                                                [value]="getvalidationparametervalue(data , i )">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-text-box>
+                                                       
+                                                            <!-- (onValueChanged)="changevalidationParamterValue(i+1, data,$event)" [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='D'">
+                                                            <dx-select-box [dataSource]="controlvaluessource" [value]="getvalidationparametervalue(data, i )" #drpDocCat
+                                                                displayExpr="ValueDisplay" (onValueChanged)="changeRefomatParamterValue(i, data,$event,'D')"
+                                                                valueExpr="ValueDisplay" [showClearButton]="true">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-select-box>
+                                                       
+                                                            <!-- [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'Locate'">
+
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultLocate" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultLocate"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultLocate" [onRemove]="onRemovedefaultLocate">
+                                        </dxo-item-dragging>
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count">
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters }}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Locate added (<span
+                                        [(innerHTML)]='selectedLocate.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedLocate" id="selectedLocate"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedLocate"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedLocate" [onRemove]="onRemoveselectedLocate"
+                                            [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedLocate(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <!--<div class="position-relative">
+                                                <span class="title hover-text" [innerHTML]="getselectedTableName()"></span>
+                                                <div class="show-hover-text" [innerHTML]="getselectedTableName()"></div>
+                                            </div>-->
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i'>
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters}}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterInfo != null && data.fieldRuleValidation.parameterInfo != ""'>
+                                                <div class="dx-fieldset ">
+                                                    <div class="dx-field"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters ).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationparamtername(i, data.fieldRuleValidation.parameterInfo)}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='T'">
+                                                           
+                                                            <dx-text-box
+                                                            (onValueChanged)="changeLocateParamterValue(i, data,$event,'T')"
+                                                                [value]="getvalidationparametervalue(data , i )">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-text-box>
+                                                       
+                                                            <!-- (onValueChanged)="changevalidationParamterValue(i+1, data,$event)" [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='D'">
+                                                            <dx-select-box [dataSource]="controlvaluessource" [value]="getvalidationparametervalue(data , i )" #drpDocCat
+                                                                displayExpr="ValueDisplay" (onValueChanged)="changeLocateParamterValue(i, data,$event,'D')" valueExpr="ValueDisplay"
+                                                                [showClearButton]="true">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-select-box>
+                                                       
+                                                            <!-- [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'Review'">
+
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultReview" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultReview"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultReview" [onRemove]="onRemovedefaultReview">
+                                        </dxo-item-dragging>
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count">
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters }}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Review added (<span
+                                        [(innerHTML)]='selectedReview.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedReview" id="selectedReview"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedReview"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedReview" [onRemove]="onRemoveselectedReview"
+                                            [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedReview(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <!--<div class="position-relative">
+                                                <span class="title hover-text" [innerHTML]="getselectedTableName()"></span>
+                                                <div class="show-hover-text" [innerHTML]="getselectedTableName()"></div>
+                                            </div>-->
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i'>
+                                                {{data.fieldRuleValidation.noOfParameters == 0 ? '' :data.fieldRuleValidation.noOfParameters}}
+                                                <span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters >= 1">Parameters</span>
+                                            </div>
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterInfo != null && data.fieldRuleValidation.parameterInfo != ""'>
+                                                <div class="dx-fieldset ">
+                                                    <div class="dx-field"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters ).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationparamtername(i, data.fieldRuleValidation.parameterInfo)}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='T'">
+                                                           
+                                                            <dx-text-box
+                                                            (onValueChanged)="changeReviewParamterValue(i, data,$event,'T')"
+                                                                [value]="getvalidationparametervalue(data , i )">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-text-box>
+                                                       
+                                                            <!-- (onValueChanged)="changevalidationParamterValue(i+1, data,$event)" [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                        <div class="dx-field-value mb-2" *ngIf="getValidationparamterType(i, data.fieldRuleValidation.parameterInfo)=='D'">
+                                                            <dx-select-box [dataSource]="controlvaluessource" [value]="getvalidationparametervalue(data , i )" #drpDocCat
+                                                                displayExpr="ValueDisplay" (onValueChanged)="changeReviewParamterValue(i, data,$event,'D')" valueExpr="ValueDisplay"
+                                                                [showClearButton]="true">
+                                                                <div *ngIf="getIsManadatoryParameter(i, data.fieldRuleValidation.parameterInfo)=='true'">
+                                                                    <dx-validator>
+                                                                        <dxi-validation-rule type="custom" message="Parameter value is required"
+                                                                            [validationCallback]="validateValidationMandatoryFieldValue">
+                                                                        </dxi-validation-rule>
+                                                                    </dx-validator>
+                                                                </div>
+                                                            </dx-select-box>
+                                                       
+                                                            <!-- [value] ="getvalidationparametervalue(data.parameterValue , i )"*ngFor="let items of ParameterInfoArray;let i=index" -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'Regular Expression'">
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultExpressions" [repaintChangesOnly]="true"
+                                        [searchEnabled]="true" [searchExpr]="['fieldRegularExpression.name']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultExpressions"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultExpressions" [onRemove]="onRemovedefaultExpressions">
+                                        </dxo-item-dragging>
+
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRegularExpression.name}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRegularExpression.name}}</span>
+                                                </div>
+
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="subtitle">{{data.fieldRegularExpression.id}}</div> -->
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Regular expressions added(
+                                    <span>{{selectedExpressions.length}}</span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedExpressions" [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedExpressions"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedExpressions" [onRemove]="onRemoveselectedExpressions">
+                                        </dxo-item-dragging>
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRegularExpression.name}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRegularExpression.name}}</span></div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedSelectedRegex(data)"></dx-button>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="subtitle">{{data.fieldRegularExpression.id}}</div> -->
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5" *ngIf="showFieldContent == 'Extraction Sequence'">
+                            <div class="col-sm-6">
+                                <div class="draggable-list">
+                                    <dx-list #vwlist class="draggable-item fixed-height" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="defaultExtractValidations" name="deextraction" id="deextraction"
+                                        [repaintChangesOnly]="true" [searchEnabled]="true"
+                                        [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                        searchMode="contains">
+
+                                        <dxo-item-dragging group="tasks" [data]="defaultExtractValidations"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAdddefaultExtractValidations"
+                                            [onRemove]="onRemovedefaultExtractValidations">
+                                        </dxo-item-dragging>
+
+
+
+                                        <dxo-search-editor-options placeholder="Search">
+                                        </dxo-search-editor-options>
+
+                                        <div *dxTemplate="let data of 'item'">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <!-- <dx-button class="btn btn-secondary btn-iconic drag-drop-close" icon="close"></dx-button> -->
+                                                </div>
+                                            </div>
+                                            <div class="subtitle">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div class="parameter-count"
+                                                *ngIf="data.fieldRuleValidation.noOfParameters > 0">
+                                                {{data.fieldRuleValidation.noOfParameters}} Parameter<span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters > 1">s</span></div>
+
+                                        </div>
+                                    </dx-list>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="added-items-count">Extract Validations added (<span
+                                        [(innerHTML)]='selectedExtractValidations.length'></span>)</div>
+                                <div class="draggable-list draggable-area fixed-height">
+                                    <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                        [(dataSource)]="selectedExtractValidations" name="extraction" id="extraction"
+                                        [repaintChangesOnly]="true">
+
+                                        <dxo-item-dragging group="tasks" [data]="selectedExtractValidations"
+                                            [allowReordering]="true" [onDragStart]="onDragStart"
+                                            [onAdd]="onAddselectedExtractValidations"
+                                            [onRemove]="onRemoveselectedExtractValidations" [onReorder]="onReorder">
+                                        </dxo-item-dragging>
+
+
+                                        <div *dxTemplate="let data of 'item'; let i = index">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="title hover-text hover-text-table">
+                                                    {{data.fieldRuleValidation.description}}</div>
+                                                <div class="show-hover-text ">
+                                                    <span>{{data.fieldRuleValidation.description}}</span>
+                                                </div>
+                                                <div style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                    <dx-button class="btn btn-secondary btn-iconic drag-drop-close"
+                                                        icon="close" (click)="UnMappedExtractValidation(data)">
+                                                    </dx-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="subtitle ">{{data.fieldRuleValidation.name}}</div>
+
+                                            <div [ngClass]="checkvalidationOnalidation(data) ? 'parameter-count' : 'parameter-count extraction-validation'"
+                                                (click)='i =! i' *ngIf="data.fieldRuleValidation.noOfParameters > 0">
+                                                {{data.fieldRuleValidation.noOfParameters}} Parameter<span
+                                                    *ngIf="data.fieldRuleValidation.noOfParameters > 1">s</span></div>
+
+
+                                            <div class="parameter-fields mt-2"
+                                                *ngIf='i &&  data.fieldRuleValidation.parameterName != null && data.fieldRuleValidation.parameterName != ""'>
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field md-3"
+                                                        *ngFor="let item of ' '.repeat(data.fieldRuleValidation.noOfParameters).split(''); let i = index">
+                                                        <div class="dx-field-label">
+                                                            {{ this.getValidationExtractionparamtername(i, data.fieldRuleValidation.parameterName )}}
+                                                        </div>
+                                                        <div class="dx-field-value mb-2">
+                                                            <dx-text-box
+                                                                (onValueChanged)="changevalidationExtractParamterValue(i+1, data,$event)"
+                                                                [value]="getvalidationExtractparametervalue(data.parameterValue , i )">
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="custom"
+                                                                        message="Parameter value is required"
+                                                                        [validationCallback]="validateextractionMandatoryFieldValue">
+                                                                    </dxi-validation-rule>
+
+                                                                    <dxi-validation-rule type="pattern"
+                                                                        pattern="^[A-Za-z0-9, %-]+$"
+                                                                        message="Only comma and percentage special characters are allowed">
+                                                                    </dxi-validation-rule>
+
+
+                                                                </dx-validator>
+
+                                                            </dx-text-box>
+                                                            <!-- [value] ="getvalidationparametervalue(data.parameterValue , i )" -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </dx-list>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="showFieldContent == 'Custom'">
+                            <div *ngIf='customValidationEdits == false' id="customValidatioList" class="">
+                                <dx-button class="btn btn-primary mb-10" text="Create" (click)="AddCustomRule()">
+                                </dx-button>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="draggable-list">
+
+                                            <dx-list #vwlist class="draggable-item fixed-height"
+                                                pageLoadMode="ScrollBottom" [(dataSource)]="tempcustomRuleValidations"
+                                                [repaintChangesOnly]="true" [searchEnabled]="true"
+                                                [searchExpr]="['fieldRuleValidation.name', 'fieldRuleValidation.description']"
+                                                searchMode="contains">
+                                                <dxo-item-dragging group="tasks" [data]="tempcustomRuleValidations"
+                                                    [allowReordering]="true" [onDragStart]="onDragStart"
+                                                    [onAdd]="onAddtempcustomRuleValidations"
+                                                    [onRemove]="onRemovetempcustomRuleValidations">
+                                                </dxo-item-dragging>
+
+                                                <dxo-search-editor-options>
+                                                </dxo-search-editor-options>
+                                                <div *dxTemplate="let data of 'item'">
+
+                                                    <div class="d-flex justify-content-start align-items-center">
+                                                        <div class="title hover-text hover-text-table">
+                                                            {{data.fieldRuleValidation.name}}</div>
+
+                                                        <!-- <div class="d-flex justify-content-end">
+                                                            <dx-button icon="edit" class="btn btn-iconic"
+                                                                (click)="editCustomRuleValidation(data,data.rowIndex)">
+                                                            </dx-button>
+                                                        </div> -->
+
+                                                        <div class="show-hover-text ">
+                                                            <span>{{data.fieldRuleValidation.name}}</span>
+                                                        </div>
+
+                                                        <div
+                                                            style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                            <dx-button icon="edit" class="btn btn-iconic"
+                                                                (click)="editCustomRuleValidation(data,data.rowIndex)">
+                                                            </dx-button>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div class="subtitle">
+                                                        {{data.fieldRuleValidation.description == '' ? '-' : data.fieldRuleValidation.description}}
+                                                    </div>
+
+                                                </div>
+                                            </dx-list>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="added-items-count h-auto"> Custom Validations added (<span
+                                                [(innerHTML)]='customRuleValidations.length'></span>)</div>
+                                        <div class="draggable-list draggable-area fixed-height"
+                                            style="height:calc(100vh - 344px);">
+                                            <dx-list class="draggable-item" pageLoadMode="ScrollBottom"
+                                                [(dataSource)]="customRuleValidations" id="customrule"
+                                                [repaintChangesOnly]="true">
+
+                                                <dxo-item-dragging group="tasks" [data]="customRuleValidations"
+                                                    [allowReordering]="true" [onDragStart]="onDragStart"
+                                                    [onAdd]="onAddcustomRuleValidations"
+                                                    [onRemove]="onRemovecustomRuleValidations" [onReorder]="onReorder">
+                                                </dxo-item-dragging>
+
+
+                                                <dxo-search-editor-options placeholder="Search">
+                                                </dxo-search-editor-options>
+                                                <div *dxTemplate="let data of 'item'; let i = index">
+
+
+                                                    <!-- <div class="title">{{data.fieldRuleValidation.name}}</div>
+                                                    <div class="subtitle">{{data.fieldRuleValidation.description}}</div> -->
+
+
+                                                    <div class="d-flex justify-content-start align-items-center">
+                                                        <div class="title hover-text hover-text-tablesme"
+                                                            [title]="data.fieldRuleValidation.expression">
+                                                             {{data.fieldRuleValidation.name}}
+                                                            </div>
+                                                        <div class="show-hover-text ">
+                                                            <span>
+                                                                <!-- {{data.fieldRuleValidation.name}} -->
+                                                                {{data.fieldRuleValidation.expression}} 
+                                                                </span> 
+                                                        </div>
+                                                        
+                                                        <div
+                                                            style="display: flex;position: absolute; right: 40px; top: 14px;">
+                                                            <dx-button
+                                                                class="btn btn-secondary btn-iconic drag-drop-close"
+                                                                icon="close" (click)="UnMappedCustomValidation(data)">
+                                                            </dx-button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="subtitle ">                                                         
+                                                        <!-- {{data.fieldRuleValidation.expression == '' ? '-' : data.fieldRuleValidation.expression}} -->
+                                                         {{data.fieldRuleValidation.description == '' ? '-' : data.fieldRuleValidation.description}} 
+                                                    </div>
+
+                                                </div>
+                                            </dx-list>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf='customValidationEdits == true' id="customValidationEdits" class="">
+                                <perfect-scrollbar style=" height: calc(100vh - 242px); padding-right: 20px;">
+                                    
+                                    <dx-validation-group #targetGroup>
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <div class="dx-fieldset">
+                                                    <dx-button (click)="onCancelCustomRuleValidationEdits()" icon="arrowleft"
+                                        class="back-btn mb-20"></dx-button>
+                                                    </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field">
+                                                        <div class="dx-field-label">Name<span
+                                                                class="icon-asterisk">*</span>
+                                                        </div>
+                                                        <div class="dx-field-value">
+                                                            <dx-text-box
+                                                                [(value)]="customvalidationmapping.fieldRuleValidation.validationName">
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required"
+                                                                        message="Custom rule name cannot be blank">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                            </dx-text-box>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field">
+                                                        <div class="dx-field-label">Description</div>
+                                                        <div class="dx-field-value">
+                                                            <dx-text-box
+                                                                [(value)]="customvalidationmapping.fieldRuleValidation.description">
+                                                            </dx-text-box>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field">
+                                                        <div class="tab-panel m-1">
+                                                            <ul class="tab-panel-header small-links">
+                                                                <li>
+                                                                    <a [ngClass]="{'active': showTabContentcustom == getTab.tabName}"
+                                                                        (click)="showTabContentcustom = getTab.tabName; getIndex(i,customsearch)"
+                                                                        *ngFor="let getTab of customValidationTab; let i = index;">
+                                                                        <span class="label">{{getTab.tabName}}</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="tab-panel-body">
+                                                                <!-- <div class="row" style="padding: 0px 25px;">
+                                                                    <div class="col-sm-6 mb-3">
+                                                                        <dx-text-box placeholder='Search records'
+                                                                            #customsearch
+                                                                            (onKeyPress)='onEnterKeyCustomSearch($event)'
+                                                                            (onInput)="searchCustomValidationtabdata($event)">
+                                                                        </dx-text-box>
+                                                                    </div>
+                                                                </div> -->
+                                                                <perfect-scrollbar class="h-190px">
+
+                                                                    <ul class="list-unstyled custom-validation-data">
+                                                                        <ng-container
+                                                                            *ngFor='let item of customValidationTab; let i = index;'>
+                                                                            <ng-container *ngIf="setIndex == i">
+
+                                                                                <li (click)='ontologyValuedblclick(getContent,builderField)'
+                                                                                    *ngFor='let getContent of item.content'>
+
+                                                                                    <div class="validation-rules">
+                                                                                        <div>{{getContent.name}}</div>
+                                                                                        <div class="format-subtitle">
+                                                                                            {{getContent.description == ''?'--':getContent.description }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                </perfect-scrollbar>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field">
+                                                        <div class="dx-field-label">Operator</div>
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button" class="btn btn-operator"
+                                                                [ngClass]="{'active': selectedButton == item}"
+                                                                (click)="activateButton(item); itemClick(item)"
+                                                                *ngFor="let item of operatorSymbol">{{item}}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="dx-fieldset">
+                                                    <div class="dx-field">
+                                                        <div class="dx-field-label">Builder<span
+                                                                class="icon-asterisk">*</span></div>
+                                                        <div class="dx-field-value">
+                                                            <dx-text-area #builderField
+                                                                [(value)]="customvalidationmapping.fieldRuleValidation.validationExpression"
+                                                                (click)="getCaretPos(builderField)"
+                                                                (keyup)="getCaretPos(builderField)">
+
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required"
+                                                                        message="Builder cannot be blank">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                            </dx-text-area>
+                                                        </div>
+                                                        <div class="dx-field-value">
+                                                            <dx-button class="btn btn-primary" text="Add Rule"
+                                                            (onClick)="saveTempValidation(targetGroup)"></dx-button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-sm-12">                                                
+                                            </div> -->
+                                        </div>
+                                    </dx-validation-group>
+                                </perfect-scrollbar>
+                            </div>
+                        </div>
+
+                        <div class="row ROI-row" *ngIf="showFieldContent == 'ROI'">
+                            <div class="col-sm-12">
+                                <div class="drag-drop-card">
+                                    <div class="drag-drop-card-body" style="flex-direction: column;">
+                                        <div class="drag-drop-card-header mb-auto" style="z-index: 2;">
+                                            <!-- <button class="btn btn-secondary"> Upload sample document</button> -->
+                                            <div class="document-action-bar">
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-operator h-30"
+                                                        (mouseenter)="toggleDefault(item.btnName)"
+                                                        (mouseleave)="toggleDefault('')"
+                                                        [ngClass]="{'active': selectedButton == item.btnName}"
+                                                        (click)="activateButton(item);"
+                                                        *ngFor="let item of documentButtonActions"><i
+                                                            class="{{'dx-icon-'+item.icon}} fs-20"></i>
+
+                                                        <div class="btn-tooltip"
+                                                            [ngClass]='(defaultVisible == item.btnName)?"show":"hidden"'>
+                                                            {{defaultVisible}}
+                                                        </div>
+                                                        <!-- <dx-tooltip 
+                                                        target="{{'#'+item}}" 
+                                                        [(visible)]="defaultVisible"
+                                                        [closeOnOutsideClick]="false">
+                                                        <div *dxTemplate="let data of 'content'">
+                                                            ExcelRemote IR
+                                                        </div>
+                                                    </dx-tooltip> -->
+                                                    </button>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="drag-drop-card-body">
+                                            <div class="document-operations">
+                                                <div class="documentDivParent" id="documentDivParent">
+
+                                                </div>
+                                                <div class="thumbnailDivParent" id="thumbnailDivParent">
+                                                    <perfect-scrollbar style="height: calc(100vh - 320px);">
+                                                        <!--  <ul class="thumbnailList">
+                                                            <li>
+                                                                <img src="assets/images/images.png" />
+                                                            </li>
+                                                            <li>
+                                                                <img src="assets/images/images.png" />
+                                                            </li>
+                                                            <li>
+                                                                <img src="assets/images/images.png" />
+                                                            </li>
+                                                            <li>
+                                                                <img src="assets/images/images.png" />
+                                                            </li>
+                                                        </ul>-->
+                                                    </perfect-scrollbar>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Plugin goes here-->
+                                        <!-- <perfect-scrollbar>
+    </perfect-scrollbar> -->
+                                    </div>
+                                    <!-- <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="message-alert">
+        <div class="d-flex align-items-center justify-content-between">
+            <p><i class="icon dx-icon-check"></i> <span>1</span> extraction sequences saved successfully</p>
+            <div>
+                <dx-button text="Undo"> </dx-button>
+                <dx-button icon="close"></dx-button>
+            </div>
+        </div>
+    </div> -->
+            <div class="popup-actions">
+
+                <!-- <dx-button id="btnsubpopcancel" text="Cancel" class="btn btn-secondary" (onClick)="clearAllObjectMode()"></dx-button>
+        <dx-button id="btnsavefieldrule" text="Save" type="success" class="btn btn-primary" [useSubmitBehavior]="true"></dx-button>
+	-->
+
+                <button type="button" class="btn btn-secondary" (click)="clearAllObjectMode()">Cancel</button>
+                <button type="submit" class="btn btn-primary"
+                    *ngIf="this.documentfieldmodel.id === 0 ? Authorize.toAdd : Authorize.toUpdate">Save</button>
+
+            </div>
+        </form>
+
+    </dx-validation-group>
+
+</dx-popup>
+
+
+<!-- Add table popup starts -->
+<dx-popup class="custom-popup no-fixed-footer height-auto" [width]="500" height="auto" [showTitle]="true"
+    [dragEnabled]="false" [closeOnOutsideClick]="false" [title]="popuptableTitle" [(visible)]="addTablePopupVisible"
+    [showCloseButton]="false">
+
+    <dx-validation-group #valCreateTable>
+        <form>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="dx-fieldset">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Name<span class="icon-asterisk">*</span></div>
+                            <dx-text-box class="dx-field-value" [(value)]="docTypeTable.name" placeholder="Table name">
+
+                                <dx-validator>
+                                    <dxi-validation-rule type="required" message="Table name is required">
+                                    </dxi-validation-rule>
+                                </dx-validator>
+
+                            </dx-text-box>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="dx-fieldset">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Description<span class="icon-asterisk">*</span></div>
+                            <dx-text-area [(value)]="docTypeTable.description">
+                                <dx-validator>
+                                    <dxi-validation-rule type="required" message="Description is required">
+                                    </dxi-validation-rule>
+                                </dx-validator>
+                            </dx-text-area>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <dxi-item class="custom-popup-footer" dataField="">
+                <dx-button class="btn btn-secondary" text="Cancel" (onClick)="cancelCreateTable()"></dx-button>
+                <dx-button class="btn btn-primary" [text]="popupBtnSavetext" [useSubmitBehavior]="true"
+                    (onClick)="createaddTable()" *ngIf="Authorize.toAdd"></dx-button>
+            </dxi-item>
+
+        </form>
+
+
+    </dx-validation-group>
+
+</dx-popup>
+
+
+<!-- Add table popup ends -->

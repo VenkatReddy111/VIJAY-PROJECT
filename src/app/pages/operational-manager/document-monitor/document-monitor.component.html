@@ -1,0 +1,139 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Document monitor</h1>
+            <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                <div class="dx-field mr-3">
+                    <div class="dx-field-value">
+                        <dx-select-box [dataSource]="documenttypelist" displayExpr="name" placeholder="Select Type"
+                            [(value)]="documenttype" valueExpr="id"
+                            (onValueChanged)="OnDocumentTypeSelectionChange($event)"></dx-select-box>
+                    </div>
+                </div>
+                <div class="dx-field mr-3">
+                    <div class="dx-field-value">
+                        <dx-select-box [dataSource]="documentsubtypelist" displayExpr="documentsubtypename"
+                            [(value)]="documentsubtype" valueExpr="documentsubtypeid" placeholder="Select Subtype"
+                            (onValueChanged)="OnDocumentSubTypeSelectionChange($event)"></dx-select-box>
+                    </div>
+                </div>
+                <div class="dx-field mr-0">
+                    <div class="dx-field-value">
+                        <div class="datepicker">
+                            <input type="text" ngxDaterangepickerMd [(ngModel)]="selected"
+                                [keepCalendarOpeningWithRange]="true" [showRangeLabelOnInput]="true" [timePicker]="true"
+                                startKey="start" endKey="end" [ranges]="ranges" [alwaysShowCalendars]="true"
+                                class="form-control" (datesUpdated)="ondateChange($event)" />
+                            <i class="icon-date-and-time"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="tab-panel-body p-0">
+        <div class="table-wrapper table-wrapper-card documentMonitor-dashboard-table">
+            <!-- <div class="grid-buttons" style="width: 60%; text-align: right; z-index:0;">
+                <div class="card docMonCards">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="count-type" [innerHTML]="Openingbalance"></span>
+                            <span class="label-type">Opening balance</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card docMonCards">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="count-type" [innerHTML]="Received"></span>
+                            <span class="label-type">Received</span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <dx-data-grid id="gridContainer" [(dataSource)]="documentmonitorlist"
+                [masterDetail]="{ enabled: true, template: 'detail' }" keyExpr="DocumentHeaderID" [showBorders]="true">
+                <!-- <dx-data-grid id="gridContainer" [dataSource]="documentmonitorlist" [showBorders]="true"> -->
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-search-panel [visible]="true" [width]="315" placeholder="Search"></dxo-search-panel>
+                <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+                <!-- cellTemplate="docIdTemplate" -->
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="DocumentHeaderID"
+                    caption="Document ID" cellTemplate="docIdTemplate"></dxi-column>
+                <div *dxTemplate="let docId of 'docIdTemplate'; let itemIndex = index">
+                    <span class="btn-link"
+                        (click)='documentPopup(docId.data.DocumentHeaderID)'>{{docId.data.DocumentHeaderID}}</span>
+                </div>
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="true" dataField="DocumentPath"
+                    caption="Document Name"></dxi-column>
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="true" dataField="Status"
+                    caption="Current stage"></dxi-column>
+                <dxi-column [allowSorting]="false" dataField="ReceivedDate" caption="Date received"
+                    format="MMM dd yyyy HH:mm" dataType="date"></dxi-column>
+                <!-- cellTemplate="durationTemplate" -->
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="NextAction"
+                    caption="Action" cellTemplate="durationTemplate"></dxi-column>
+                <div *dxTemplate="let duration of 'durationTemplate'; let itemIndex = index">
+                    <span class="btn-link"
+                        (click)='redirectToNextAction(duration.data.DocumentHeaderID,duration.data.NextAction)'>{{duration.data.NextAction}}</span>
+                </div>
+                <div *dxTemplate="let documentstatus of 'detail'">
+                    <!-- <div class="audit-custom-table audit-table">
+                        <dx-data-grid [dataSource]="getDochistory(documentstatus.key)" [showBorders]="false"
+                            [columnAutoWidth]="true" [showColumnHeaders]="false" [showRowLines]="false"
+                            [showColumnLines]="false" class="audit-custom-table">
+                            <dxi-column dataField="lastUpdateDate" dataType="date" dataType="date"
+                                format="MMM dd yyyy HH:mm"></dxi-column>
+                            <dxi-column dataField="stage"></dxi-column>
+                            <dxi-column dataField="duration"></dxi-column>
+                            <dxi-column dataField="remarks"></dxi-column>
+                        </dx-data-grid>
+                    </div> -->
+                    <table class="audit-custom-table " style="width: 40%; text-align: left;">
+                        <tbody>
+                            <tr style="width: 40%; text-align: center;">
+                                <th>Last Update On</th>
+                                <th>Stage</th>
+                                <th>Duration</th>
+                                <th>Remarks</th>
+                            </tr>
+                            <tr *ngFor="let values of getDochistory(documentstatus.key)">
+                                <td style="text-align: center;">{{values.lastUpdateDate}}</td>
+                                <td style="text-align: center;">{{values.stage}}</td>
+                                <td style="text-align: center;">{{values.duration}}</td>
+                                <td style="text-align: left;">{{values.remarks}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </dx-data-grid>
+        </div>
+    </div>
+
+    <!-- Forward popup starts -->
+    <dx-popup class="custom-popup" [width]="1000" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false"
+        title="Document" [(visible)]="showDocumentPopup" [showCloseButton]="false">
+        <perfect-scrollbar class="h-100">
+            <div class="img-container">
+                <!-- <img class="object-fit-contain" src="assets/images/Document.png" /> -->
+                <div class="document-operations">
+                    <div class="documentDivParent" id="documentDivParent">
+                    </div>
+                    <div class="thumbnailDivParent" id="thumbnailDivParent">
+                    </div>
+                </div>
+            </div>
+        </perfect-scrollbar>
+        <dxi-item class="custom-popup-footer" dataField="">
+            <dx-button class="btn btn-primary" text="Ok"
+                (onClick)="showDocumentPopup = false;clearObjectsBeforeClose()">
+            </dx-button>
+        </dxi-item>
+    </dx-popup>
+
+</div>
+<!-- Forward popup ends -->

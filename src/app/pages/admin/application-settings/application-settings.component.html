@@ -1,0 +1,89 @@
+<div class="page-heading">
+    <h1>Application settings</h1>
+</div>
+
+<dx-validation-group #valGroup>
+    <form id="editForm" (ngSubmit)="AppSettingSave()">
+        <div class="table-wrapper table-wrapper-card">
+            <div class="grid-buttons p-20">
+                <dx-button class="btn btn-secondary" text="Cancel" (onClick)="cancel();"></dx-button>
+                <dx-button class="btn btn-primary" text="Save" [useSubmitBehavior]="true" *ngIf='(Authorize.toAdd)'>
+                </dx-button>
+            </div>
+
+            <dx-data-grid #dataGrid class="page-table" id="gridappsetting" [dataSource]="headerList"
+                [showColumnHeaders]="false" [masterDetail]="{ enabled: true, template: 'detail' }" keyExpr="headerName"
+                [showBorders]="true" (onRowExpanding)="RowExpanding($event)" (onRowCollapsing)="RowCollapsing($event)">
+                <dxo-paging [enabled]="true"></dxo-paging>
+                <dxo-search-panel [visible]="true" [width]="315" placeholder="Search">
+                </dxo-search-panel>
+                <dxo-header-filter [allowSearch]="false" [visible]="true"></dxo-header-filter>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                <dxi-column dataField="headerName" caption="Title"></dxi-column>
+
+                <div *dxTemplate="let headerList of 'detail'">
+                    <dx-data-grid [dataSource]="childDatasource" [showBorders]="true" keyExpr="id"
+                        [columnAutoWidth]="true">
+                        <dxi-column dataField="settingLabel" caption="Key"></dxi-column>
+                        <dxi-column dataField="settingValue" caption="Value" cellTemplate="appsettingvalue">
+                        </dxi-column>
+                        <div *dxTemplate="let statusItem of 'appsettingvalue'">
+                            <span class="toggle">
+                                <div [title]="statusItem.data.settingValue">
+                                    <dx-radio-group *ngIf="statusItem.data.settingName == 'LoggerType'"
+                                        [items]="loggingtypes" layout="horizontal" [(value)]="logmethod"
+                                        (onValueChanged)="changeLogger($event)"></dx-radio-group>
+                                    <dx-text-box
+                                        *ngIf="(statusItem.data.valueType === 'String') && (statusItem.data.settingName!='LoggerType')"
+                                        [maxLength]="256" [(value)]="statusItem.data.settingValue"
+                                        [disabled]="((logmethod == 'Database') && (statusItem.data.settingName=='LoggerPath'))">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Path required">
+                                            </dxi-validation-rule>
+                                            <dxi-validation-rule type="stringLength" [min]="2" [max]="256"
+                                                message="{{statusItem.data.settingLabel}} must have at least 2 and maximum 256 characters.">
+                                            </dxi-validation-rule>
+                                            <dxi-validation-rule type="pattern" pattern="^[A-Za-z0-9. /:\\]+$"
+                                                message="Only Dot,Dash and Underscore special characters are allowed">
+                                            </dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+
+                                <dx-number-box [showSpinButtons]="true" [showClearButton]="true"
+                                    *ngIf="statusItem.data.valueType === 'Number'"
+                                    [(value)]="statusItem.data.settingValue">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Value required">
+                                        </dxi-validation-rule>
+                                        <dxi-validation-rule type="range" [min]="0" [max]="10000"
+                                            message="Value should be between 0 to 10000">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+                                    <dx-button icon="percent"></dx-button>
+                                </dx-number-box>
+
+                                <dx-number-box [showSpinButtons]="true" [showClearButton]="true"
+                                    *ngIf="statusItem.data.valueType === 'Percentage'"
+                                    [(value)]="statusItem.data.settingValue">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Value required">
+                                        </dxi-validation-rule>
+                                        <dxi-validation-rule type="range" [min]="0" [max]="100"
+                                            message="Value should be between 0 to 100">
+                                        </dxi-validation-rule>
+                                    </dx-validator>
+                                    <dx-button icon="percent"></dx-button>
+                                </dx-number-box>
+
+                                <dx-switch *ngIf="statusItem.data.valueType === 'Boolean'"
+                                    [(value)]="statusItem.data.settingValue"></dx-switch>
+                            </span>
+                        </div>
+                    </dx-data-grid>
+                </div>
+            </dx-data-grid>
+        </div>
+    </form>
+</dx-validation-group>

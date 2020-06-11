@@ -1,0 +1,45 @@
+dx-data-grid{
+    height: calc(100vh - 158px);
+}
+
+.regular-checkbox {
+    -webkit-appearance: none;
+ 	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+    position: relative;
+    display: block;
+    height: 18px;
+    width: 18px;
+    border: 1px solid #d4d4d4;
+    border-radius: 2px;
+	margin-right: 15px;
+	cursor: pointer;
+}
+
+.regular-checkbox:checked {
+    background-color: #6c5cbe;
+    border-color: #6c5cbe;
+}
+
+.regular-checkbox:active, .regular-checkbox:checked:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.regular-checkbox:checked:after {
+    background-color: #6c5cbe;
+	border-color: #6c5cbe;
+	left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    display: block;
+}
+
+.dx-accordion .table-wrapper tr th {
+    padding: 10px 10px;
+}
+

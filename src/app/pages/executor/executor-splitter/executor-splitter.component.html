@@ -1,0 +1,174 @@
+<div class="row">
+    <div class="col-md-12">  
+        <div class="card card-fill top-action-bar d-flex flex-row justify-content-between align-items-center mbb-10">
+          
+            <div class="dx-fieldset mb-0 d-flex align-items-center dx-fieldset-horizontal">
+                    <div class="dx-field mb-0">
+                        <div class="dx-field-label">Document Name</div>
+                        <div class="dx-field-value">{{fileName}}</div>
+                    </div>
+                    <div class="dx-field mb-0">         
+                            <div class="dx-field-label">Total split pages</div>
+                            <div class="dx-field-value">{{totalSplittedPages}}</div>
+                        </div>   
+                        <div class="dx-field mb-0">  
+  
+                              <div class="dx-field-label">Pending split pages</div>
+                                <div class="dx-field-value">{{totalPendingSplitFiles}}</div>
+                            </div>
+			    <div class="dx-field mb-0">     
+  
+                              <div class="dx-field-label">Documents created</div>  
+                                <div class="dx-field-value">{{numberOfDocCreated}}</div>         
+                            </div>  
+                </div>
+            <div class="top-action-bar-btns">    
+                <dx-button *ngIf="IsDiscardBtnVisible" type="button" [disabled]=discardButtonFlag class="btn btn-secondary" (onClick)="OnClick_Discard()">Discard</dx-button>
+                <dx-button *ngIf="IsSaveBtnVisible" type="button" [disabled]=mergeButtonFlag class="btn btn-primary" (onClick)="OnClick_Merge()" text="{{mergeButton}}"></dx-button>
+                <!-- added on 26-feb-2020 -- button for hotkeys  -->
+                <button  type="button" class="btn btn-secondary" (click)="HotkeysPopup();">HotKeys</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Executor Splitter: MAIN CONTENT-->  
+
+  
+<div class="card executor-splitter">       
+    <div class="row"> 
+        <div class="col-sm-3 border-right pr-0">  
+            <div class="left-section">
+            
+                    <div class="section-heading">  
+                        <span class="toggle" ><span class="mr-10"> Show selected pages</span> <dx-switch [disabled]= disableFlage  (onValueChanged)='ShowSelectePages($event)'  [value]='showSelectedFlag'></dx-switch></span>
+                    </div>
+
+
+                    <perfect-scrollbar>
+                        <ul class="custom-checklist">        
+                           
+                            <li>
+                                    <label *ngIf="IsCheckAllBtnVisible" class="checkbox-container">
+                                            <input type="checkbox" name="" [checked]=IsCheckAll  [disabled]= disableFlage (change)="CheckAllPages($event)">
+                                            <span class="checkmark"></span>
+                                            <span class="checkbox-label">Select All <span *ngIf="fileList.length > 0">({{fileList.length}})</span></span>
+                                          </label>
+                            <li *ngIf='showSelectedFlag==false'>
+                                <ng-container  *ngFor="let item of fileList; let i = index;">
+                                        <label class="checkbox-container">
+                                                <input type="checkbox" name=""  [checked]="item.isChecked" (change)="checkBox_fileChanged($event,item)">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-count">{{i + 1}}.</span>
+                                                <span class="checkbox-img"><img src="{{ item.FilePath }}" /></span>
+                                              </label>
+                                  </ng-container>
+                                  
+                            </li>  
+                            <li *ngIf='showSelectedFlag==true'>
+                                <ng-container  *ngFor="let item of fileList; let i = index;">
+                                        <label class="checkbox-container" *ngIf='item.isChecked==true'>
+                                                <input type="checkbox" name="" checked="true" (change)="checkBox_fileChanged($event,item)">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-count">{{i + 1}}.</span>
+                                                <span class="checkbox-img"><img src="{{ item.FilePath }}" /></span>
+                                              </label>
+                                  </ng-container>
+                                  
+                            </li>
+                        </ul>
+        
+                    </perfect-scrollbar>
+
+              
+                <div class="merge-pages">
+                    <div *ngIf='fileList.length  == 0'>No any selection to merge</div>
+                    <div *ngIf='fileList.length > 0'>Merge <span>{{CheckedCount}}</span> selected page<span *ngIf='CheckedCount > 1'>s</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 img-container">
+            <perfect-scrollbar >
+                <div class="img-holder selected" *ngFor='let item of selectedFileSequenceList'>
+                    <span  class="tag">Selected</span>
+                   <img  src="{{item.FilePath}}" />
+                </div>
+            </perfect-scrollbar>   
+        </div>
+    </div>
+</div>
+
+<!--===== Sucessfull message for allocated users starts=====-->
+
+<!-- <div *ngIf="message" class="message-alert success bottom-0">
+    <div class="d-flex align-items-center justify-content-between">
+        <p><i class="icon dx-icon-check"></i> <span>{{selectedFileListSpliter.length}}</span> documents {{messageOperation}} successfully</p>
+    </div> 
+</div> 
+<div *ngIf="noDocMsgFlag" class="message-alert success top-0">
+    <div class="d-flex align-items-center justify-content-between">
+        <p> <span></span>{{noDocMsg}}</p>
+    </div>
+</div>       -->
+
+
+<!--===== Sucessfull message for allocated users ends=====-->
+
+<!-- popup for hotkeys -- start added on 26-feb-2020 -->
+<dx-popup class="custom-popup" [width]="400" [height]="400" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="true" title="Hot Keys" [(visible)]="HotkeysPopupVisible" [showCloseButton]="true">
+    <div >
+        <div class="hot-keys-overlay"  >
+            <!-- <perfect-scrollbar> -->
+            <perfect-scrollbar >
+                <table class="custom-table sticky-header table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                HotKey
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                        <tr>
+                            <td>
+                                Ctrl+Alt+D
+                            </td>
+                            <td>
+                                Discard Button
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Alt+S
+                            </td>
+                            <td>
+                                Save Button
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Page Up
+                            </td>
+                            <td>
+                                Scroll Up the document
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Page Down
+                            </td>
+                            <td>
+                                Scroll Down the document
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </perfect-scrollbar>
+            <!-- </perfect-scrollbar> -->
+        </div>
+    </div>
+</dx-popup>
+<!-- popup for hotkeys -- end -->

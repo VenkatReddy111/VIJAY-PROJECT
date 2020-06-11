@@ -1,0 +1,35 @@
+<ng-container *ngIf="isAutorized(); else notAuthorized">
+    <div class="wrapper">
+        <div class="container">
+            <div class="position-relative">
+                <dx-toolbar class="nav-menu" [items]="toolbarContent">
+                </dx-toolbar>
+                <app-header></app-header>
+            </div>
+            <dx-drawer [openedStateMode]="selectedOpenMode" [position]="selectedPosition" [revealMode]="selectedRevealMode" template="template" [opened]="false" [closeOnOutsideClick]="true" class="primary-menu">
+                <div *dxTemplate="let data of 'template'" class="h-auto">
+                    <div class="header-navigation">
+                        <div class="nav-panel" *ngFor="let item of navigation">
+                            <h3>{{item.text}}</h3>
+                            <ul>
+                                <li *ngFor="let i of item.links">
+                                    <a (click)='toggleMenu()' routerLink='{{i.link}}'>{{i.text}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="content" class="main-content">
+                    <router-outlet></router-outlet>
+                </div>
+            </dx-drawer>
+        </div>
+    </div>
+
+</ng-container>
+
+<ng-template #notAuthorized>
+    <app-single-card style="overflow: hidden;">
+        <router-outlet></router-outlet>
+    </app-single-card>
+</ng-template>

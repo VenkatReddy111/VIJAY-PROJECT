@@ -1,0 +1,17 @@
+<div style="vertical-align: middle;">      
+
+    <div class="dx-field" style="font-size: medium; text-align: left;" [innerHTML]="confirmMsg">        
+    </div>
+
+    <div style="text-align: center;">
+        <dx-button text="No" class="btnSecondary" (click)="cancel()" style="margin-right: 10px;" >
+        </dx-button>
+        <dx-button text="Yes" type="success" class="btnPrimary" (click)="continue()">
+        </dx-button>
+    </div>
+
+    <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="loadingVisible" [showIndicator]="true"
+      [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+    </dx-load-panel>
+    
+</div>

@@ -1,0 +1,664 @@
+<div class="page-heading">
+    <h1>{{titleString}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tab-panel">
+            <ul class="tab-panel-header">
+                <li>
+                    <a [ngClass]="{'active': showTabContent == item}" (click)="activateTabContent(item)"
+                        *ngFor="let item of smeTabs">
+                        <span class="label">{{item}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-panel-body p-0">
+                <div *ngIf="showTabContent == 'Input'">
+
+                    <div class="table-wrapper table-wrapper-card">
+                        <div class="grid-buttons p-20">
+                            <dx-button *ngIf='(addBtn == true) && (Authorize.toAdd)' (click)="InputSourcecustomAddpopup()"
+                                       class="btn btn-primary" text="Add"></dx-button>
+                                       <dx-button *ngIf='(editBtn == true) && (Authorize.toUpdate)' (click)="inputSourceEditPopup()" class="btn btn-primary"
+                                       text="Edit"></dx-button>
+                            <dx-button *ngIf='(deleteBtn == true) && (Authorize.toDelete)' (click)="deleteRecords()" class="btn btn-secondary" text="Delete"></dx-button>
+                           
+                        </div>
+
+                        <dx-data-grid #grid class="page-table" [dataSource]="inputsourceList" [showRowLines]="false" showBorders='true'
+                                      (onSelectionChanged)="onInputSourceSelectionChanged($event)" *ngIf="Authorize.toView">
+                            <!--Table columns start-->
+                            <dxo-selection mode="multiple"></dxo-selection>
+
+                            <!--Table filters-->
+                            <dxo-search-panel [visible]="true" [width]="315"
+                                              placeholder="Search"></dxo-search-panel>
+                            <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+                            <dxo-paging [enabled]="false"></dxo-paging>
+                            <dxo-editing 
+                            mode="row"
+                            [allowUpdating]="false"
+                            [allowDeleting]="false"
+                            [allowAdding]="false">
+                       </dxo-editing>
+                            <!-- <dxo-scrolling mode="infinite"></dxo-scrolling> -->
+
+                            <dxi-column   dataField="name" caption="Name" [allowSorting]="true"></dxi-column>
+                            <dxi-column   dataField="documentType" caption="Function" [allowSorting]="true"></dxi-column>
+                            <dxi-column   dataField="inputSourceTypeName" caption="Input Type" [allowSorting]="true">
+                            </dxi-column>
+                            <dxi-column [allowHeaderFiltering]="false"  dataField="isMultiDocInPdf" [allowSorting]="true"
+                                        caption="Multi-Page" cellTemplate="isDefaultTemplate" [visible]="false"></dxi-column>
+                            <div *dxTemplate="let isDefaultItem of 'isDefaultTemplate'">
+                                <span class="toggle">
+                                    <dx-switch #multistatus [value]='isDefaultItem.data.isMultiDocInPdf'(click)="OnVlaueChangesIsMulti(multistatus.value,isDefaultItem.data)"  ></dx-switch>
+                                </span>
+                            </div>
+                            <dxi-column [allowHeaderFiltering]="false" dataField="isActive" [allowSorting]="true"
+                                        caption="Status" cellTemplate="statusTemplate"></dxi-column>
+                            <div *dxTemplate="let statusItem of 'statusTemplate'">
+                                <span class="toggle">
+                                    <dx-switch #activestatus [value]='statusItem.data.isActive' (click)="OnVlaueChangesActive(activestatus.value,statusItem.data)"></dx-switch>
+                                </span>
+                            </div>
+
+                        </dx-data-grid>
+                    </div>
+                    <!-- </perfect-scrollbar> -->
+                </div>
+                <div *ngIf="showTabContent == 'Output'">
+                    <div class="table-wrapper table-wrapper-card">
+                        <div class="grid-buttons p-20" [hidden]="isExportButtonColVisible">
+                            <dx-button *ngIf='(addBtn == true) && (Authorize.toAdd)' (click)="addOutputSourcePopop()" class="btn btn-primary"
+                                text="Add"></dx-button>
+                                <dx-button *ngIf='(editBtn == true) && (Authorize.toUpdate)' (click) = "customOutputEditPopup()" class="btn btn-primary" text="Edit"></dx-button>
+     
+      <dx-button *ngIf='(deleteBtn == true) && (Authorize.toDelete)' (click)="deleteRecords1()" class="btn btn-secondary" text="Delete"></dx-button>
+                        </div>
+                        
+                        <dx-data-grid class="page-table" [dataSource]="documentoutputList" [showRowLines]="false" showBorders='true' (onSelectionChanged)="onSelectionChanged($event)" *ngIf="Authorize.toView">
+                            
+                            <dxo-selection mode="multiple"></dxo-selection>
+
+                            <!--Table filters-->
+                            <dxo-search-panel [visible]="true" [width]="315"
+                                placeholder="Search"></dxo-search-panel>
+                            <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+                            <dxo-paging [enabled]="false"></dxo-paging>
+                            <dxo-scrolling mode="infinite"></dxo-scrolling>
+                            
+                            <dxi-column  [allowSorting]="true" dataField="name" caption="Name"
+                                ></dxi-column><!--cellTemplate="nameTemplate"-->
+                            <!-- <div *dxTemplate="let name of 'nameTemplate';">
+                                <span class="btn-link">{{name.data.Name}}</span>
+                            </div> -->
+                            <dxi-column [allowSorting]="true" dataField="documentType" caption="Function"></dxi-column>
+                            <dxi-column [allowSorting]="true" dataField="documentSubType" caption="Document">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="true" dataField="lastRunResult" [allowFiltering]="false" alignment="center"  [(visible)]="isStatusVisible" caption="Last run result">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="true" dataField="fileFormat" caption="Format">
+                            </dxi-column>
+                            <dxi-column [allowSorting]="true" dataField="status" caption="Status"  [(visible)]="isStatusVisible">
+                            </dxi-column>
+
+                            <dxi-column class="text-center" dataField="Action" caption="Action" cellTemplate="actionTemplate" [allowFiltering]="true" [allowSorting]="false" [(visible)]="isExportButtonColVisible"></dxi-column>
+                            <div *dxTemplate="let actionItem of 'actionTemplate'">
+                                <dx-button class="btn btn-primary export-btn" text="Export" (click)="Execute(actionItem.data)"></dx-button>
+                            </div>
+
+                        </dx-data-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete popup starts -->
+<dx-popup class="custom-popup" [width]="400" [height]="200" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false" title="Delete Input Source" [(visible)]="Deletepopup" [showCloseButton]="false">
+    <p>Selected inputSource status will be deactivated.</p>
+        <dxi-item class="custom-popup-footer" dataField="">
+            <dx-button class="btn btn-secondary" text="No" (onClick)="Deletepopup = false"></dx-button>
+            <dx-button class="btn btn-primary" text="Yes" (click)="inputSourceDeletePopup()"></dx-button>
+        </dxi-item>
+    </dx-popup>
+    <!-- Delete popup ends-->
+
+<!-- ADD popup starts -->
+<dx-popup class="custom-popup no-fixed-footer" width="700px" height="529px" [showTitle]="true"
+          title="{{(inputSourceField.id == 0)?'Add Input Location':'Edit Input Location'}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="addInputSourcePopop"
+          [showCloseButton]="false">
+    <div class="step-wizard">
+        <dx-validation-group #valGroupInputSource>
+            <form id="editForm">
+                <ul class="step-wizard-tabs">
+                    <li>
+                        <a [ngClass]="{'active': (showSourecDetailsTab == item)}" (click)="activateSourecDetailsTab(item)"
+                           *ngFor="let item of inputSourceDetailsTabs; let i = index;">
+                            <div class="label" [ngClass] = "{'errorredbackground' : (isInputDetailsError && item == 'Input details')}"><span>{{i+1}}</span>{{item}}</div>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-panel-body">                  
+                    <div class="row" *ngIf='showSourecDetailsTab == "Input details"' >
+                        <div class="col-md-12">
+                            <form class="h-100-per" action="your-action" (ngSubmit)="openParameterList()">
+                                <div class="dx-fieldset" style="padding-right: 25px;">
+                                    <perfect-scrollbar class="h-245px">
+                                    <div class="row h-100-per">
+                                        <div class="col-sm-6">
+
+                                            <div class="dx-field">
+                                                <div class="dx-field-label">Name<span class="icon-asterisk">*</span></div>
+                                                <div class="dx-field-value">
+                                                    <dx-text-box [(value)]="inputSourceField.name" [maxLength]="99">
+                                                        <dx-validator>
+                                                            <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                        </dx-validator>
+                                                    </dx-text-box>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="dx-field">
+                                                <div class="dx-field-label">
+                                                     Function<span class="icon-asterisk">*</span>
+                                                </div>
+                                                <div class="dx-field-value">
+                                                    <dx-select-box [dataSource]="documenttypelist" [(value)]='inputSourceField.documentTypeID' displayExpr="name" 
+                                                                   valueExpr="id" (onValueChanged)="InputSourcedocumentTypeValueChanged($event.value)">
+                                                        <dx-validator>
+                                                            <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                        </dx-validator>
+                                                    </dx-select-box>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+
+                                            <div class="dx-field">
+                                                <div class="dx-field-label">
+                                                     Document<span class="icon-asterisk">*</span>
+                                                </div>
+                                                <div class="dx-field-value">
+                                                    <dx-select-box [items]="inputSourcedocumentsubtype" displayExpr="documentsubtypename"
+                                                                   [(value)]="inputSourceField.documentSubTypeId"
+                                                                   valueExpr="documentsubtypeid">
+                                                        <dx-validator>
+                                                            <dxi-validation-rule type="required" message="">
+                                                            </dxi-validation-rule>
+                                                        </dx-validator>
+                                                    </dx-select-box>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+
+                                            <div class="dx-field">
+                                                <div class="dx-field-label">File Type<span class="icon-asterisk">*</span>
+                                                </div>
+                                                <div class="dx-field-value">
+                                                    <dx-tag-box [items]="filefilterdata" valueExpr="name" displayExpr="name"  
+                                                                [(value)]="inputSourceField.fileFilter" [showSelectionControls]="true"  >
+                                                                <dx-validator>
+                                                                    <dxi-validation-rule type="required" message="">
+                                                                    </dxi-validation-rule>
+                                                                </dx-validator>
+                                                            </dx-tag-box>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+
+                                            <div class="dx-field">
+                                                <div class="dx-field-value">
+                                                    <div class="d-flex justify-content-start align-items-center">
+                                                        <div class="toggle mr-3" *ngIf='showMultiDocSupported == true'>
+                                                            <span class="mr-10"> Multiple document supported</span>
+                                                            <dx-switch [(value)]='inputSourceField.isMultiDocInPdf'></dx-switch>
+                                                        </div>
+                                                        <div class="toggle">
+                                                            <span class="mr-10"> Active</span>
+                                                            <dx-switch [(value)]='inputSourceField.isActive'></dx-switch>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </perfect-scrollbar>
+                                </div>
+                                <div class="custom-popup-footer" style="position:fixed;">
+                                    <dx-button class="btn btn-secondary" text="Cancel" (onClick)="addInputSourcePopop = false">
+                                    </dx-button>
+                                    <dx-button class="btn btn-primary" text="Next" [useSubmitBehavior]="true"></dx-button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf='showSourecDetailsTab == "Input type and parameters"'>
+                        <div class="col-md-12">
+                            <form class="h-100-per" action="your-action" (ngSubmit)="saveInputSource()">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="dx-fieldset">
+                                            <div class="dx-field">
+                                                <div class="dx-field-label">
+                                                    Input source type<span class="icon-asterisk">*</span>
+                                                </div>
+                                                <div class="dx-field-value">
+                                                    <dx-select-box [disabled]="inputSourceField.id!=0 ?true:false" [dataSource]="inputSourceType"
+                                                                [(value)]='inputSourceField.inputSourceTypeId' displayExpr="name" valueExpr="id" #sourcetypevalue
+                                                                (onValueChanged)='SourceTypeChanged(sourcetypevalue.value, inputSourceField.id)'>
+                                                        <dx-validator>
+                                                            <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                        </dx-validator>
+                                                    </dx-select-box>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <perfect-scrollbar class="h-245px"> 
+                                <div class="dx-fieldset" style="padding-right: 25px;">
+                                   
+                                    
+                                    <div class="row h-100-per">
+                                        <ng-container *ngFor="let item of parameterType; let i = index">
+                                         
+                                            <div class="col-sm-6">
+                                                <div class="dx-field">
+                                                    <div class="dx-field-label">{{item.displayName}}<span class="icon-asterisk">*</span></div>
+                                                    <div class="dx-field-value" *ngIf="item.masterID === 0">
+                                                        <dx-text-box *ngIf="item.parameterValueType === 'String' &&  item.isEncrypted === false"
+                                                                     [(value)]="item.parameterValue" [maxLength]="200">
+                                                            <dx-validator>
+                                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                            </dx-validator>
+                                                        </dx-text-box>
+
+                                                        <dx-text-box *ngIf="item.parameterValueType === 'Numeric' &&  item.isEncrypted === false"
+                                                                     [(value)]="item.parameterValue" [maxLength]="200"
+                                                                     (keypress)="numericOnly($event)">
+                                                            <dx-validator>
+                                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                            </dx-validator>
+                                                        </dx-text-box>
+
+                                                        <dx-date-box *ngIf="item.parameterValueType === 'DateTime'  &&  item.isEncrypted === false"
+                                                                     [(value)]="item.parameterValue" [maxLength]="200" displayFormat="dd/MM/yyyy"
+                                                                     invalidDateMessage="The date must have the following format: dd/MM/yyyy" [acceptCustomValue]="false"
+                                                                     type="date">
+                                                            <dx-validator>
+                                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                            </dx-validator>
+                                                        </dx-date-box>
+                                                        <dx-text-box *ngIf="item.parameterValueType === 'String'  &&  item.isEncrypted === true"
+                                                                     [(value)]="item.parameterValue" [maxLength]="200"
+                                                                     stylingMode="filled"
+                                                                     [(mode)]="passwordMode"
+                                                                    class='password-field'>
+                                                            <dx-validator>
+                                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                            </dx-validator>
+                                                            <dxi-button name="today" location="after" [options]="passwordButton"></dxi-button>
+                                                        </dx-text-box>
+
+                                                    </div>
+                                                    <div class="dx-field-value" *ngIf="item.masterID !== 0">
+                                                        <dx-select-box [(value)]="item.parameterValue" [dataSource]="item.masterModel"
+                                                                       displayExpr="value"
+                                                                       valueExpr="value">
+                                                            <dx-validator>
+                                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                            </dx-validator>
+                                                        </dx-select-box>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                        </ng-container>
+                                     
+                                    </div>
+                             
+                                </div>
+                            </perfect-scrollbar>
+                                <div class="custom-popup-footer" style="position:fixed;">
+                                    <dx-button class="btn btn-secondary" text="Cancel" (onClick)="addInputSourcePopop = false">
+                                    </dx-button>
+                                    <dx-button class="btn btn-primary" text="validateAndSaveOutput" [useSubmitBehavior]="true"></dx-button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                
+                </div>
+            </form>
+        </dx-validation-group>
+    </div>
+</dx-popup>
+<!-- Input source popup ends -->
+
+
+<!-- ADD output source popup starts -->
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px"  height="auto" [showTitle]="true"
+title="{{(documentoutputModel.id == 0)?'Add Output Location':'Edit Output Location'}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showOutputSourcePopop"
+    [showCloseButton]="false">
+    <div class="step-wizard">
+        <dx-validation-group #valGroup>
+            <form id="editForm" (ngSubmit)="ActivateOutputTab()">
+        <ul class="step-wizard-tabs">
+            <li>
+                <a [ngClass]="{'active': showOutputSourecDetailsTab == item}" (click)="activateOutputSourecDetailsTab(item)"
+                    *ngFor="let item of outputSourceDetailsTabs; let i = index;">
+                    <div class="label"><span>{{i+1}}</span>{{item}}</div>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-panel-body">
+        <div class="row" *ngIf='showOutputSourecDetailsTab == "Output details"'>
+                <div class="col-md-12">
+                     <!-- <form class="h-100-per" action="your-action" (submit)="onFormSubmit($event)">  -->
+                        <form class="h-100-per" action="your-action" (submit)="onFormSubmit($event)">
+                         <perfect-scrollbar class="h-300px">
+                        <div class="dx-fieldset" style="padding-right: 25px;">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Name<span class="icon-asterisk">*</span></div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box [(value)]="documentoutputModel.name"
+                                            [showClearButton]="true"[maxLength]="299">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Name is required"></dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Function<span class="icon-asterisk">*</span>
+                                        </div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [items]="documettype" displayExpr="name" [disabled]="documentoutputModel.id!=0 ?true:false" [(value)]="documentoutputModel.documentTypeID" valueExpr="id"
+                                            (onValueChanged)="documentTypeValueChanged($event)">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Document Type is required"></dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Document<span class="icon-asterisk">*</span>
+                                        </div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [disabled]="documentoutputModel.id!=0 ?true:false"
+                                            [(value)]="documentoutputModel.documentSubTypeID" [items]="documentsubtype"
+                                            displayExpr="documentsubtypename" valueExpr="documentsubtypeid"
+                                            #docsubtypeid (onValueChanged)="documentSubTypeValueChanged(docsubtypeid.value, documentoutputModel.id)"
+                                            >
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Document Sub Type is required"></dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="section-label">Output</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Type</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [(value)]="documentoutputModel.inputSourceTypeID"
+                                            [items]="inputsourceType" displayExpr="name" valueExpr="id"
+                                            (onValueChanged)="inputsourcetypeChanged($event)">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Type is required">
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Destination name</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box  [(value)]="documentoutputModel.inputSourceID"
+                                            [items]="inputsourceName" displayExpr="name" valueExpr="id">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Destination Name is required">                                                    
+                                                </dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Destination folder</div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box   [(value)]="documentoutputModel.destinationFolder" class="w-20Per"
+                                            [showClearButton]="true" [maxLength]="99">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                                    message="Destination Folder is required"></dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="col-sm-6">
+                                        <div class="dx-field">
+                                        <div class="dx-field-label">File format</div>
+                                        <div class="dx-field-value">
+                                                <dx-select-box  [(value)]="documentoutputModel.fileFormat"
+                                                [items]="outputfileFormat" displayExpr="name" valueExpr="name"
+                                                (onValueChanged)="outputfileFormatChanged($event)"
+                                                >
+                                                <dx-validator>
+                                                    <dxi-validation-rule type="required" message="File format is required"></dxi-validation-rule>
+                                                </dx-validator>                                                
+                                                </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3" *ngIf="StrfileFormat=='csvv'">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Row delimiter</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box  [(value)]="documentoutputModel.rowDelimiter"
+                                            [items]="CSVDelimiter" displayExpr="name" valueExpr="name">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Row delimiter required"></dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3" *ngIf="StrfileFormat=='csvv'">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Column delimiter</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [(value)]="documentoutputModel.columnDelimiter"
+                                            [items]="CSVDelimiter" displayExpr="name" valueExpr="name">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Column delimiter required"></dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3" *ngIf="StrfileFormat=='xml'">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Encoding Type</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [(value)]="documentoutputModel.unicode" [items]="XMLEncodingType"
+                                            displayExpr="name" valueExpr="name">
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message="Encoding Type required"></dxi-validation-rule>
+                                            </dx-validator>
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Keep duration</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [dataSource]="['Dropbox']">
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="col-sm-6">
+
+                                    <div class="dx-field" [hidden] = "documentoutputModel.inputSourceTypeID != 2">
+                                        <div class="dx-field-label">Email ID<span class="icon-asterisk">*</span></div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box  [(value)]="documentoutputModel.emailID"
+                                            [showClearButton]="true" [maxLength]="99">
+                                            <!-- <dx-validator>
+                                                <dxi-validation-rule type="required"
+                                               message="Email Id is required"></dxi-validation-rule>
+                                               <dxi-validation-rule type="email"
+                                               message="Email Id is invalid"></dxi-validation-rule>
+                                            </dx-validator> -->
+                                        </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+               </perfect-scrollbar>
+                </form>
+                </div>
+        </div>
+        <div class="row" *ngIf='showOutputSourecDetailsTab == "Transformations"'>
+                <div class="col-md-12">
+                    <div class="tab-panel">
+                <ul class="tab-panel-header">
+                    <li>
+                        <a [ngClass]="{'active': showTransformationsTabContent == item}" (click)="activateFieldTabContent(item)"
+                            *ngFor="let item of transformationsTabs">
+                            <span class="label">{{item}}</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-panel-body mb-20 p-0 h-300px" >
+                        <div *ngIf="showTransformationsTabContent == 'Fields'">
+                            <div class="table-wrapper mt-3 table-wrapper-card">
+                           
+                                    <dx-data-grid class="h-285px" [dataSource]="documenttransformationNormal" [showRowLines]="false" showBorders='true'
+                                        [selectedRowKeys] = "selectedFields" (onSelectionChanged)="OnFieldTabSelectionChange($event)"
+                                        >
+                                            <!--Table filters-->
+                                            <dxo-selection mode="multiple"></dxo-selection>
+                                            <dxi-column dataField="id" caption="id" [visible]="false"></dxi-column>
+                                            <dxi-column [allowSorting]="false" dataField="fieldName" caption="Field Name"></dxi-column>
+                                            <dxi-column [allowSorting]="false" dataField="dataType" caption="Field Type"></dxi-column>
+                                            <dxi-column [allowSorting]="false" caption="Format" cellTemplate="ExportTemplate" [visible]="false"></dxi-column>
+                                            <div *dxTemplate="let item of 'ExportTemplate'">
+                                                    <div class="dx-field" mb-0>
+                                                            <div class="dx-field-value">
+                                                                <dx-select-box [dataSource]="item.data.documentOutputFieldFormatModels"
+                                                                displayExpr="transformationFormat" valueExpr="docOutputFieldFormatID"
+                                                                [showClearButton]="true" [(value)]="item.data.docOutputFieldFormatID">
+                                                                </dx-select-box>
+                                                            </div>
+                                                        </div>
+                                            </div>
+                                        </dx-data-grid>
+                            </div>
+                        </div>
+                        <div *ngIf="showTransformationsTabContent == 'Tables'">
+                            <perfect-scrollbar class="h-285px mt-3">
+
+                                    <dx-accordion class="panel-h-auto mb-3" #accordion [dataSource]="tablesTab" [collapsible]="false" [multiple]="false"
+                                    [animationDuration]="300">
+                                    <!-- [animationDuration]="300" [selectedItems]="[tablesTab[0]]"> -->
+                                    <div *dxTemplate="let company of 'title'; let i = index;">
+                                        <dx-check-box [value]="true" text="{{company.FieldName}}"></dx-check-box>
+                                        <!-- <div class="accordion-item-title"></div> -->
+                                    </div>
+                                    <div *dxTemplate="let company of 'item'">
+                                            <div class="table-wrapper table-wrapper-card overflow-hidden mt-2 mb-20">
+                                            <dx-data-grid [dataSource]="documenttransformationtabular" [showRowLines]="false" showBorders='true'  [selectedRowKeys] = "selectedTabularFields" (onSelectionChanged) = "OnTableFieldTabSelectionChange($event)">
+                                                    <!--Table filters-->
+                                                    <dxo-selection mode="multiple"></dxo-selection> 
+                                                    <dxi-column dataField="id" caption="id" [visible]="false"></dxi-column>                       
+                                                    <dxi-column [allowSorting]="false" dataField="fieldName" caption="field name"></dxi-column>
+                                                    <dxi-column [allowSorting]="false" dataField="dataType" caption="file type"></dxi-column>
+                                                    <dxi-column [allowSorting]="false" caption="Format" cellTemplate="ExportTemplate"></dxi-column>
+                                                    <div *dxTemplate="let item of 'ExportTemplate'">
+                                                            <div class="dx-field" mb-0>
+                                                                    <div class="dx-field-value">
+                                                                        <dx-select-box [dataSource]="item.data.documentOutputFieldFormatModels"
+                                                                        displayExpr="transformationFormat" valueExpr="docOutputFieldFormatID"
+                                                                        [showClearButton]="true" [(value)]="item.data.docOutputFieldFormatID">
+                                                                        </dx-select-box>
+                                                                    </div>
+                                                                </div>
+                                                    </div>
+                                                </dx-data-grid>
+                                            </div>
+                                    </div>
+                                </dx-accordion>
+                            </perfect-scrollbar>
+                        </div>
+                </div>
+                    </div>
+                </div>
+                </div>
+                <div class="custom-popup-footer">
+                        <dx-button class="btn btn-secondary" text="Cancel" (onClick)="showOutputSourcePopop = false">
+                        </dx-button>
+                        <dx-button class="btn btn-primary" [(text)]="labelCaption" [useSubmitBehavior]="true"></dx-button>
+            </div>
+       
+    </div>
+        </form>
+        </dx-validation-group>
+    </div>
+
+</dx-popup>
+<!-- ADD output source popup ends -->
+
+<!-- Delete popup starts -->
+<!-- <dx-popup class="custom-popup" [width]="400" [height]="200" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false" title="Delete Input Source" [(visible)]="DeleteOutPutpopup" [showCloseButton]="false">
+    <p>Are you sure you want to delete?</p>
+        <dxi-item class="custom-popup-footer" dataField="">
+            <dx-button class="btn btn-secondary" text="No" (onClick)="Deletepopup = false"></dx-button>
+            <dx-button class="btn btn-primary" text="Yes"></dx-button>
+        </dxi-item>
+    </dx-popup> -->
+    <!-- Delete popup ends -->

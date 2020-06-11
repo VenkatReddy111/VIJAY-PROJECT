@@ -1,0 +1,214 @@
+<div class="card profile-card">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="profile-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="section-label">My Profile</div>
+                    <dx-button text="Change password" class="btn btn-tertiary" icon='key' (click)='changePassword();'>
+                    </dx-button>
+                </div>
+
+                <div class="profile-header-content">
+                    <ul>
+                        <li>
+                            <div class="img-container">
+                                <img src="assets/images/noImageUploaded.png" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fs-21 fw-500">{{(userfield.FullName)==''?'-':userfield.FullName}}</div>
+                            <div class="font-italic"></div>
+                        </li>
+                        <li>
+                            <div class="dx-fieldset mb-0 dx-fieldset-horizontal">
+                                <div class="dx-field mb-0">
+                                    <div class="dx-field-label" style="color: black;"><b>User name</b></div>
+                                    <div class="dx-field-value">
+                                        {{(userfield.Name)==''?'-':userfield.Name}}
+                                    </div>
+                                </div>
+                                <div class="dx-field mb-0">
+                                    <div class="dx-field-label" style="color: black;"><b>Role</b></div>
+                                    <div class="dx-field-value">
+                                        {{(userrole)==''?'-':userrole}}
+                                    </div>
+                                </div>
+                                <div class="dx-field mb-0">
+                                    <div class="dx-field-label" style="color: black;"><b>Email ID</b></div>
+                                    <div class="dx-field-value">
+                                        {{(userfield.EmailId)==''?'-':userfield.EmailId}}
+                                    </div>
+                                </div>
+                                <div class="dx-field mb-0">
+                                    <div class="dx-field-label" style="color: black;"><b>Mobile number</b></div>
+                                    <div class="dx-field-value">
+                                        {{(userfield.MobileNo)==''?'-':userfield.MobileNo}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="profile-body">
+                <perfect-scrollbar style="height: calc(100vh - 340px);">
+                    <div class="section-label">Notification settings</div>
+                    <div class="section-sublabel mb-2">Setup</div>
+                    <div class="dx-fieldset mb-0 dx-fieldset-horizontal">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Users</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Admin' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Executor" class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">I/O sources</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Input source not in sync' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Executor" class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">OCR engines</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Admin' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Executor" class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Queues</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Input source not in sync' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Executor" class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">SMTP settings</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Admin' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Executor" class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Application settings</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Input source not in sync' class="mb-0 mt-2"></dx-check-box>
+                                        <dx-check-box text="Send alerts every" class="mt-2"></dx-check-box>
+                                        <dx-select-box [dataSource]="['Hour']"></dx-select-box>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-sublabel mb-2">Create</div>
+                    <div class="dx-fieldset mb-0 dx-fieldset-horizontal">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Doctypes</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Admin' class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">I/O sources</div>
+                                    <div class="dx-field-value d-flex flex-column">
+                                        <dx-check-box text='Input source not in sync' class="mb-0 mt-2"></dx-check-box>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </perfect-scrollbar>
+            </div>
+            <div class="profile-footer">
+                <div class="d-flex justify-content-end align-items-center">
+                    <!-- <dx-button text="Reset" class="btn btn-secondary"  (onClick)="reset()"></dx-button> -->
+                    <dx-button text="Cancel" class="btn btn-secondary" (onClick)="Cancel()"></dx-button>
+                    <!-- <dx-button text="Save" class="btn btn-primary"  (onClick)="save()" [useSubmitBehavior]="true"></dx-button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Change password -->
+<dx-popup class="custom-popup" [width]="400" [height]="395" [showTitle]="true" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" title="Change password" [(visible)]="changePasswordModal" [showCloseButton]="false">
+    <dx-validation-group #valGroup>
+        <form>
+            <div class="dx-fieldset">
+                <div class="dx-field">
+                    <div class="dx-field-label">Old password <span class="icon-asterisk">*</span></div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="OldPassword" width="100%" [(mode)]="passwordMode">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="Old password is required">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButton"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">New password <span class="icon-asterisk">*</span> </div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="NewPassword" width="100%" [(mode)]="passwordModes">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="New password is required">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="stringLength" [min]="6" [max]="16"
+                                    message="New password must have at least 6 and maximum 16 characters.">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="pattern" pattern="((?=.*\d)(?=.*[A-Z])(?=.*\W).{6,6})"
+                                    message="Required lowercase, uppercase, number, one special character">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButtons"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Confirm password <span class="icon-asterisk">*</span></div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="ConfirmPassword" width="100%" [(mode)]="passwordModess">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="Confirm password is required">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="compare" [comparisonTarget]="passwordComparison"
+                                    message="New password and Confirm password must be same.">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButtonss"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+            </div>
+
+            <dxi-item class="custom-popup-footer">
+                <dx-button class="btn btn-secondary" text="Cancel" (onClick)="cancel()" type="submit"></dx-button>
+                <dx-button class="btn btn-primary" text="Update" [useSubmitBehavior]="true"
+                    (onClick)="resetpassword($event)"></dx-button>
+            </dxi-item>
+        </form>
+    </dx-validation-group>
+</dx-popup>
+<!-- Change password -->

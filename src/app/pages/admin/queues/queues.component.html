@@ -1,0 +1,221 @@
+<div class="page-heading">
+    <h1>Queue Manager</h1>
+</div>
+ 
+<div class="table-wrapper table-wrapper-card">  
+    <div class="grid-buttons p-20">
+        <dx-button *ngIf='(addBtn == true) && (Authorize.toAdd)' (click)="addQueue()" class="btn btn-primary"
+            text="Add"></dx-button>
+        <dx-button *ngIf='(editBtn == true)  && (Authorize.toUpdate)' (click)="editQueuepopup()" class="btn btn-primary"
+            text="Edit"></dx-button>
+        <dx-button *ngIf='(deleteBtn == true) && (Authorize.toDelete)' (click)="deleteRecords() " class="btn btn-secondary"
+            text="Deactivate"></dx-button>
+    </div>
+    <dx-data-grid class="page-table" [dataSource]="queuelist" [showRowLines]="false" showBorders='true'
+        (onSelectionChanged)="onSelectionChanged($event)" *ngIf="Authorize.toView">
+        <dxo-selection mode="multiple"></dxo-selection>
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search">
+        </dxo-search-panel>
+        <dxo-header-filter [allowSearch]="false" [visible]="true"></dxo-header-filter>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxi-column  dataField="serverName" caption="Server" [allowSorting]="true"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="queueconnection" caption="Stage Pair" [width]="400" cellTemplate="queueconnection">
+        </dxi-column>
+         <div *dxTemplate="let statusItem of 'queueconnection'">
+                <div class="mb-1" *ngFor="let item of statusItem.data.queueconnection.split(',')">
+                    {{item}}
+                </div>
+        </div> 
+        <dxi-column [allowSorting]="true" dataField="queueNameFeild" caption="Queue name"  cellTemplate="queueNameFeild" ></dxi-column>
+            <div *dxTemplate="let statusItem of 'queueNameFeild'">
+                <div class="mb-1" *ngFor="let item of statusItem.data.queueNameFeild.split(',')">
+                    {{item}}
+                </div>
+            </div>  
+            <dxi-column [allowHeaderFiltering]="true" dataField="isDefault" caption="Is Default"
+            cellTemplate="isDefaultstatusTemplate"></dxi-column>
+         <div *dxTemplate="let statusItem of 'isDefaultstatusTemplate'">
+            <span class="toggle">
+                <dx-switch #rowjobstatus [(value)]='statusItem.data.isDefault' (click) ="isDefaultUpdate(rowjobstatus.value, statusItem.data)"></dx-switch>
+            </span>
+        </div>
+        <dxi-column [allowHeaderFiltering]="false" dataField="isActive" [allowSorting]="true"
+        caption="Status" cellTemplate="statusTemplate"></dxi-column>
+        <div *dxTemplate="let statusItem of 'statusTemplate'">
+       <span class="toggle">
+    <dx-switch #activestatus [(value)]='statusItem.data.isActive' (click)="OnVlaueChangesActive(activestatus.value,statusItem.data)"></dx-switch>
+    </span>
+</div>
+     </dx-data-grid>
+ </div>  
+
+<!-- Delete popup starts -->
+<dx-popup class="custom-popup" [width]="400" [height]="200" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false" title="Deactivate Queue" [(visible)]="Deletepopup" [showCloseButton]="false">
+ <p>Selected Queue status will be deactivated.</p>
+    <dxi-item class="custom-popup-footer" dataField="">
+        <dx-button class="btn btn-secondary" text="No" (onClick)="Deletepopup = false"></dx-button>
+        <dx-button class="btn btn-primary" text="Yes" (click)="deleteRecords1();"></dx-button>
+    </dxi-item>
+</dx-popup>
+<!-- Delete popup starts -->
+
+<!-- ADD popup starts -->
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="auto" [showTitle]="true"
+    title="{{(serverField.queueHeaderID == 0)?'Add Server':'Edit Server'}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showAddPopop"
+    [showCloseButton]="false">
+    <div class="step-wizard">
+        <dx-validation-group #valGroup>
+            <form id="editForm" (ngSubmit)="ActivateOutputTab()">
+        <ul class="step-wizard-tabs">
+            <li>
+                <a [ngClass]="{'active': showserverTab == item}"  (click)="activateOutputSourecDetailsTab(item)"
+                    *ngFor="let item of serverTabs; let i = index;">
+                    <div class="label"><span>{{i+1}}</span>{{item}}</div>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-panel-body">
+            <!-- <perfect-scrollbar> -->
+                <div class="row" *ngIf='showserverTab == "Server Details"'>
+                    <div class="col-md-12">
+                        <form class="h-100-per" action="your-action" (submit)="onFormSubmit($event)">
+                        <!-- <form class="h-100-per" action="your-action" (ngSubmit)="openAssignQueue()"> -->
+                        <div class="dx-fieldset">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Server name<span class="icon-asterisk">*</span>
+                                        </div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box [(value)]="serverField.serverName" width="100%" (onInitialized)="setfocusserverName($event)">
+                                                  <dx-validator>
+                                                            <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                        </dx-validator>
+                                            </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Username<span class="icon-asterisk">*</span></div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box [(value)]="serverField.userName">
+                                                <dx-validator>
+                                                    <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                                </dx-validator>
+                                            </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Password<span class="icon-asterisk">*</span></div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box   [(value)]="serverField.password" 
+                                            stylingMode="filled"
+                                            [(mode)]="passwordMode"
+                                            class='password-field'>
+                                            <dx-validator>
+                                                <dxi-validation-rule type="required" message=""></dxi-validation-rule>
+                                            </dx-validator>
+                                                <dxi-button name="today" location="after" [options]="passwordButton"></dxi-button>
+                                            </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        <div class="row">
+                            <div class="col-sm-3 pr-0">
+                                <div class="dx-field">
+                                    <div class="dx-field-value">
+                                        <div class="toggle mr-3">
+                                            <span class="mr-10">Is Default</span>
+                                            <dx-switch [(value)]="serverField.isDefault"></dx-switch>
+                                            <!-- <div class="dx-field-label">{{testConnectionStatus}}</div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 p-0">
+                                <div class="dx-field"> 
+                                    <div class="dx-field-value">
+                                        <div class="toggle mr-3">
+                                            <span class="mr-10">Status</span>
+                                            <dx-switch [(value)]="serverField.isActive"></dx-switch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div >
+                            <div class="dx-field">
+                                <div class="dx-field-label">Test connection<span class="icon-asterisk">*</span>
+                                </div>
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <dx-button  text="Start connecting"  (click)='showLoader = true' (click)="QueueConnectionTest()" class="btn btn-link p-0 mr-2"></dx-button>
+                                    <div class="dx-field-label">{{testConnectionStatus}}</div>
+                                    <div *ngIf='showLoader' class="loading-indication"><div></div><div></div><div></div><div></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                <div class="row" *ngIf='showserverTab == "Assign Queues"'>
+                    <div class="col-md-12">
+                        <form class="h-100-per" action="your-action" (submit)="onFormSubmit($event)">
+                        <div class="table-wrapper table-wrapper-card mb-20">
+                            <dx-data-grid class="h-300px" [dataSource]="queueField" [showRowLines]="false"
+                                showBorders='true'>
+                                <!-- <dxo-selection mode="multiple"></dxo-selection> -->
+                                <dxo-search-panel [visible]="false" [width]="315"
+                                    placeholder="Category, doctypes and sub-types">
+                                </dxo-search-panel>
+                                <dxo-header-filter [allowSearch]="false" [visible]="false"></dxo-header-filter>
+                                <dxo-paging [enabled]="false"></dxo-paging>
+                                <dxo-scrolling mode="infinite"></dxo-scrolling>
+                                <dxi-column [allowSorting]="false" dataField="publisherSubscriberName" 
+                                 [allowEditing]="false" caption="Stage Pair">
+                                </dxi-column>
+                                <dxi-column [allowSorting]="false" dataField="queueName" [allowEditing]="true" caption="Queue name" celltemplate='qName'>
+                                <!-- <dxi-validation-rule type="required"></dxi-validation-rule> -->
+                                </dxi-column>
+                                <dxo-editing 
+                                    mode="cell" 
+                                    [allowUpdating]="true">
+                                </dxo-editing>
+                            </dx-data-grid>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                <!-- </perfect-scrollbar> -->
+                <div class="custom-popup-footer">
+                    <dx-button class="btn btn-secondary" text="Cancel" (onClick)="showAddPopop = false;">
+                    </dx-button>
+                    <dx-button class="btn btn-primary" [(text)]="labelCaption" [useSubmitBehavior]="true"></dx-button>
+                </div>
+             </div>
+           </form>
+        </dx-validation-group>
+</div>
+</dx-popup> 
+
+
+
+
+
+
+
+
+
+
+
+
+

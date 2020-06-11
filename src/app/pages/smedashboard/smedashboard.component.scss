@@ -1,0 +1,115 @@
+#tablelist .dx-empty-message {
+    color: #4a4a4a !important;
+    font-size: 14px !important;
+    padding: 0px !important;
+}
+
+.tab-panel-body {
+    perfect-scrollbar {
+        height: calc(100vh - 275px);
+    }
+}
+
+.draggable-item.fixed-height {
+    height: calc(100vh - 294px);
+    .dx-list-search {
+        position: sticky;
+        top: 0;
+    }
+}
+
+.draggable-area.fixed-height {
+    height: calc(100vh - 305px);
+}
+
+.h-228px {
+    height: 228px !important;
+}
+
+.tabpanel-item {
+    perfect-scrollbar {
+        height: 200px;
+    }
+}
+
+::ng-deep .rect {
+    text-align: center;
+    font-size: 30px;
+    padding-top: 10px;
+    height: 100%;
+}
+
+::ng-deep .demo-light {
+    background: rgba(245, 229, 166, 0.5)
+}
+
+::ng-deep .demo-dark {
+    background: rgba(148, 215, 199, 0.5);
+}
+
+::ng-deep .demo-dark.header {
+    background: rgba(243, 158, 108, 0.5);
+}
+
+::ng-deep .demo-dark.footer {
+    background: rgba(123, 155, 207, 0.5);
+}
+
+::ng-deep .small {
+    height: 50px;
+    border: 1px solid lightgray;
+}
+
+.ml-28 {
+    margin-left: 28px;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+
+.h-30 {
+    height: 30px;
+}
+
+.icon-mark,
+.icon-delete {
+    margin-top: -6px;
+}
+
+.dx-icon-save,
+.dx-icon-close {
+    margin-top: -1px;
+}
+
+.h-120px {
+    height: 120px !important;
+}
+
+//---------------added this css to resolved the scroll inside scroll issue for documentviewer
+.document-operations .documentDivParent {
+    padding: 0px !important;
+}
+
+.document-operations .documentDivParentSubtype {
+    padding: 0px !important;
+}
+
+.dx-empty-message {
+    color: #4a4a4a !important;
+    font-size: 14px !important;
+}
+
+.prmvalidation {
+    color: red;
+}
+
+.h-190px{
+    height: 190px !important;
+}
+
+.sme-uploader{
+    .dx-fileuploader-container{
+        table-layout: auto;
+    }
+}

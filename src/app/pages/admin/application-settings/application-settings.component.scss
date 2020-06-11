@@ -1,0 +1,15 @@
+dx-data-grid.page-table{
+    height: calc(100vh - 115px);
+}
+.h-300px{
+    height: 300px;
+}
+.h-400px{
+    height: 400px;
+}
+
+::ng-deep .master-detail-caption {
+    padding: 0 0 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}

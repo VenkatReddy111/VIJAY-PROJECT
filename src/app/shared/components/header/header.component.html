@@ -1,0 +1,122 @@
+<header class="d-flex align-items-center justify-content-between">
+    <div class="brand-logo">
+        <a href="#!">
+            <img src="assets/images/datamatics.png" alt="Datamatics">
+        </a>
+    </div>
+
+    <dx-toolbar class="header-toolbar">
+        <dxi-item location="after" locateInMenu="auto" *ngIf='hotKeysPopup'>
+            <app-hot-keys (click)='hotKeysPopup = false'></app-hot-keys>
+        </dxi-item>
+
+        <dxi-item location="after" locateInMenu="auto" *ngIf='logoutPopup'>
+            <!-- Logout confirmation popup -->
+            <div class="custom-overlay">
+                <div class="custom-popup confirmation-popup">
+                    <div class="custom-popup-body">
+                        <h6>Logout</h6>
+                        <p>Are you sure you want to logout of TruCap+?</p>
+                    </div>
+                    <dxi-item class="custom-popup-footer" dataField="">
+                        <dx-button class="btn btn-secondary" text="Cancel" (click)="logoutPopup = false"></dx-button>
+                        <dx-button class="btn btn-primary" text="Logout" (click)="logoutProceed()"></dx-button>
+                    </dxi-item>
+                </div>
+            </div>
+            <!-- Logout confirmation popup -->
+        </dxi-item>
+
+        <dxi-item location="after" locateInMenu="auto" menuItemTemplate="menuItem">
+            <div *dxTemplate="let data of 'item'">
+                <app-notifications></app-notifications>
+            </div>
+        </dxi-item>
+
+        <dxi-item *ngIf="menuToggleEnabled" location="before" widget="dxButton" cssClass="menu-button" [options]="{
+                icon: 'menu',
+                stylingMode: 'text',
+                onClick: toggleMenu
+            }">
+        </dxi-item>
+
+        <dxi-item location="before" cssClass="header-title" *ngIf="title" [text]="title">
+        </dxi-item>
+
+        <dxi-item location="after" locateInMenu="auto" menuItemTemplate="menuItem">
+            <div *dxTemplate="let data of 'item'">
+
+
+                <dx-button class="user-button authorization" height="100%" stylingMode="text">
+                    <div *dxTemplate="let data of 'content'">
+                        <app-user-panel [menuItems]="userMenuItems" menuMode="context"></app-user-panel>
+                    </div>
+                </dx-button>
+            </div>
+        </dxi-item>
+
+    </dx-toolbar>
+
+    <div class="trucap-logo">
+        <img src="assets/images/trucap.png" alt="Trucap +">
+    </div>
+</header>
+
+<dx-popup class="custom-popup" [width]="400" [height]="395" [showTitle]="true" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" title="Change password" [(visible)]="changePasswordModal" [showCloseButton]="false">
+    <dx-validation-group #valGroup>
+        <form (submit)="resetpassword($event)">
+            <div class="dx-fieldset">
+                <div class="dx-field">
+                    <div class="dx-field-label">Old password <span class="icon-asterisk">*</span></div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="OldPassword" width="100%" [(mode)]="passwordMode">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="Old password is required">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButton"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">New password <span class="icon-asterisk">*</span> </div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="NewPassword" width="100%" [(mode)]="passwordModes">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="New password is required">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="stringLength" [min]="6" [max]="16"
+                                    message="New password must have at least 6 and maximum 16 characters.">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="pattern" pattern="((?=.*\d)(?=.*[A-Z])(?=.*\W).{6,6})"
+                                    message="Required lowercase, uppercase, number, one special character">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButtons"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Confirm password <span class="icon-asterisk">*</span></div>
+                    <div class="dx-field-value">
+                        <dx-text-box mode="password" [(value)]="ConfirmPassword" width="100%" [(mode)]="passwordModess">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="Confirm password is required">
+                                </dxi-validation-rule>
+                                <dxi-validation-rule type="compare" [comparisonTarget]="passwordComparison"
+                                    message="New password and Confirm password must be same.">
+                                </dxi-validation-rule>
+                            </dx-validator>
+                            <dxi-button name="pass" location="after" [options]="passwordButtonss"></dxi-button>
+                        </dx-text-box>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-popup-footer">
+                <dx-button class="btn btn-secondary" text="Cancel" (onClick)="cancel()" type="submit"></dx-button>
+                <dx-button class="btn btn-primary" text="Update" [useSubmitBehavior]="true"></dx-button>
+            </div>
+        </form>
+    </dx-validation-group>
+</dx-popup>

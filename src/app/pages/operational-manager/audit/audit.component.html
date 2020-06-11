@@ -1,0 +1,71 @@
+<div class="page-heading">
+    <h1>Audit trail</h1>
+</div>
+
+<div class="position-relative">
+    <div class="datepicker">
+                    <input type="text" ngxDaterangepickerMd [(ngModel)]="selected" [keepCalendarOpeningWithRange]="true"
+                    [showRangeLabelOnInput]="true" [timePicker]="true" startKey="start" endKey="end"
+                    [ranges]="ranges" [alwaysShowCalendars]="true" class="form-control" 
+                    (datesUpdated)="ondateChange($event)" (rangeClicked)="ondateChange($event)" />
+                    <i class="icon-date-and-time"></i>
+                </div>
+</div>
+
+<div class="table-wrapper table-wrapper-card ">
+    <dx-data-grid id="gridContainer" [dataSource]="auditHeaderMasterList"
+     [masterDetail]="{ enabled: true, template: 'detail' }" keyExpr="documentHeaderId" [showBorders]="true"
+     >
+        
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search records"></dxo-search-panel>
+        <dxo-header-filter [allowSearch]="true" [visible]="true"></dxo-header-filter>
+
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="documentHeaderId" caption="Document ID"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="documentType" caption="Document Type"></dxi-column>
+        <dxi-column [allowSorting]="false" dataField="documentSubType" caption="Document Sub Type"></dxi-column>
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="currentStatus" caption="Stages"></dxi-column>
+        <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" caption="Duration"></dxi-column>
+
+        
+                     
+            <div *dxTemplate="let document of 'detail'"  >
+                <!-- <div class="audit-custom-table">
+                        <dx-data-grid 
+                            [dataSource]="getDocAuditHistory(document.key)"
+                            [showBorders]="false"
+                            [columnAutoWidth]="true" [showColumnHeaders] = "false" [showRowLines] = "false"
+                            [showColumnLines] = "false">
+                            <dxi-column dataField="lastUpdateDate" dataType="date" dataType="date"
+                            format="MMM dd yyyy HH:mm"></dxi-column>
+                            <dxi-column dataField="moduleName" ></dxi-column>
+                            <dxi-column dataField="lastUpdatedByName" ></dxi-column>
+                        
+                        </dx-data-grid>
+                </div> -->
+                <table class="audit-custom-table">
+                    <tbody>
+                        <tr *ngFor="let values of getDocAuditHistory(document.key)"> 
+                            <td>{{values.lastUpdateDate}}</td>
+                            <td>{{values.moduleName}}</td>
+                            <td>{{values.lastUpdatedByName}}</td>   
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          
+
+   
+            <!-- <div *dxTemplate="let employee of 'detail'">
+            <table class="audit-custom-table">
+                <tbody>
+                    <tr>
+                        <td>{{employee.data.lastUpdateDate}}</td>
+                        <td>{{employee.data.moduleName}}</td>
+                        <td>{{employee.data.lastUpdatedByName}}</td>
+                        <td></td>
+                    </tr>
+                      </tbody>
+            </table> 
+            </div> -->
+    </dx-data-grid>
+</div>

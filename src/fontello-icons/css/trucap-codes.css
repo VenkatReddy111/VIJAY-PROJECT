@@ -1,0 +1,19 @@
+
+.icon-synonym:before { content: '\e800'; } /* '' */
+.icon-sorting:before { content: '\e801'; } /* '' */
+.icon-delete:before { content: '\e802'; } /* '' */
+.icon-mandatory:before { content: '\e803'; } /* '' */
+.icon-save:before { content: '\e804'; } /* '' */
+.icon-edit:before { content: '\e805'; } /* '' */
+.icon-fit-to-width:before { content: '\e806'; } /* '' */
+.icon-actual-size:before { content: '\e807'; } /* '' */
+.icon-date-and-time:before { content: '\e808'; } /* '' */
+.icon-mark:before { content: '\e809'; } /* '' */
+.icon-extraction-sequence:before { content: '\e80a'; } /* '' */
+.icon-validation:before { content: '\e80b'; } /* '' */
+.icon-custom:before { content: '\e80c'; } /* '' */
+.icon-regular-expression:before { content: '\e80d'; } /* '' */
+.icon-roi:before { content: '\e80e'; } /* '' */
+.icon-fit-to-page:before { content: '\e80f'; } /* '' */
+.icon-zoom-out:before { content: '\e810'; } /* '' */
+.icon-group-3-copy:before { content: '\e811'; } /* '' */

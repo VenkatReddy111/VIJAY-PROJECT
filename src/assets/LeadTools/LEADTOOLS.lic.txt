@@ -1,0 +1,31 @@
+[Info]
+Description = License file for LEADTOOLS SDK
+Non Server License
+Evaluation License
+
+[Expiration]
+Expiry Date = 5/29/2020
+
+[Customer]
+FirstName = Pallavi
+LastName = Khatale
+Company = Unknown
+Application = Unknown
+LEADContact = Unknown
+UserContact = meetpallavi2097@gmail.com
+
+[Product]
+Version = 20.0
+PurchaseDate = Unknown
+Product1 = Unknown
+
+[SerialNumbers]
+SN = Unknown
+
+
+[Unlocks]
+L_SUPPORT_BASIC
+L_SUPPORT_APP_STORE
+
+[JSLicense]
+License = {"ver":"3.0","code":"nsDPyBU49wu3wKQTZD6c0EFC9nNytGxPJMQTb8wj8NJ8ZRyIUI5AfYtSnLIqGRj0EsmKNtDC3yeHBldf2yObYqzZwRrmeotZcto928iUQL09YSlmc5TRxnO20n4CpBXRndC9I+g/BZ5OsE4jxBznveGFRHozlRYIwa5T1RPJF3oB/zBlef5tn09goMJyU0pRSdvZwNxV88EjEexJS//rpTxNDVi2t+y0MCJxtPxB/Z9wjYZlBIwDZlsahBF0Cdxq5uWc9I0c4F8whLwWFuQmLVpgwnnn5xjLMQsuYYNy96lkOHMgEq2x3OPlBifuKtxr8Kc12HZZf8Al03Si12y+YhZx9eQPoTTSdq11NooYTN4zka8VeaOPzwP+f6Iqctti6X89ffA8WUq72+WX/W8WyQTTC64FE27MRb6rEd6YYIwt/MTYs0odJh4+vQSs4FWMDGIKJK9LjMObbpVDNhwAV/BhbCCKOzzF2FE1YzZerhA4uhzvA3LKD6nl/Ko3t923UP47PVcROaNRuD02goEwNYecM6CtdH87I/KFLExXl+14kSHtsDZ5ZzqXuWTneHHnJ2Z4cfgFLab0eHQibGh2vQnR3soMKIw64t2fjGY0xrR5kAg="}

@@ -1,0 +1,149 @@
+<div class="page-heading">
+    <h1>Function Master</h1>
+</div>
+
+<div class="table-wrapper table-wrapper-card">
+    <div class="grid-buttons p-20">
+        <dx-button *ngIf='(deleteBtn == false && editBtn == false)   && (Authorize.toAdd)' (click)="addPopup('Add')" class="btn btn-primary"
+            text="Add"></dx-button>
+        <!-- <dx-button *ngIf='deleteBtn == true && editBtn == true' (click)="deleteRecords()" class="btn btn-secondary"
+            text="Delete"></dx-button> -->
+        <dx-button *ngIf='(deleteBtn == true && editBtn == true) && (Authorize.toUpdate)' (click)="addPopup('Edit')" class="btn btn-primary"
+            text="Edit" (onClick)="edit();"></dx-button>
+    </div>
+
+    <dx-data-grid class="page-table" [(dataSource)]="doctypegrid" [showRowLines]="false" showBorders='true'
+    (onSelectionChanged)="onSelectionChanged($event)" *ngIf="Authorize.toView">
+
+        <dxo-paging [enabled]="true"></dxo-paging>
+        <dxo-editing 
+             mode="row"
+             [allowUpdating]="false"
+             [allowDeleting]="false"
+             [allowAdding]="false">
+        </dxo-editing>
+
+         <dxo-selection mode="multiple"></dxo-selection> 
+        <dxo-search-panel [visible]="true" [width]="315" placeholder="Search">
+        </dxo-search-panel>
+        <dxo-header-filter [allowSearch]="false" [visible]="true"></dxo-header-filter>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+        <dxi-column [allowHeaderFiltering]="false" [allowSorting]="false" dataField="id" caption="ID" [visible]="false"> 
+        </dxi-column>
+
+        <dxi-column [allowHeaderFiltering]="false" cssClass="text-right" [allowSorting]="false" dataField="documentCatID"
+            caption="Customer ID" [visible]="false">
+        </dxi-column>
+
+        <dxi-column [allowHeaderFiltering]="false" dataField="name" caption="Name"  cssClass="text-left" [allowSorting]="false">
+        </dxi-column>
+
+        
+
+        <dxi-column [allowHeaderFiltering]="false" [allowSorting]="false" dataField="description" caption="Description">
+        </dxi-column>
+
+        <dxi-column [allowHeaderFiltering]="false" dataField="isActive" caption="Status" cellTemplate="statusTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let statusItem of 'statusTemplate'">
+            <span class="toggle"> 
+                <dx-switch #rowjobstatus [value]='statusItem.data.isActive' (click) = "isactiveUpdate(rowjobstatus.value, statusItem.data)"></dx-switch>
+            </span>
+        </div> 
+    </dx-data-grid>
+</div>
+
+ 
+<dx-popup class="custom-popup height-auto no-fixed-footer" width="700px" height="auto" [showTitle]="true"
+title="{{popuptitle}}" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="showAddPopop"
+[showCloseButton]="false">
+<dx-validation-group #valGroup>
+<form (submit)="save()">
+    <div class="row">
+        <div class="col-md-12">
+            <perfect-scrollbar class="h-300px">
+            <div class="dx-fieldset">
+                <div class="row">
+                    
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Industry
+                                <span class="icon-asterisk">*</span>
+                                </div>
+                            <div class="dx-field-value">
+                                <dx-select-box [items]="doccategories" [(value)]="DocTypeModel.documentCatID" #drpDocCat displayExpr="categoryName"
+                                valueExpr="id" [showClearButton]="true"  >
+                                 <dx-validator>
+                                    <dxi-validation-rule type="required" message="Category is required">
+
+                                    </dxi-validation-rule>
+                                </dx-validator> 
+                                </dx-select-box>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Function Name<span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-box [(value)]="DocTypeModel.name" >
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Document Type Name is required">
+                                        </dxi-validation-rule> 
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="col-sm-6">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Description<span class="icon-asterisk">*</span></div>
+                            <div class="dx-field-value">
+                                <dx-text-box [(value)]="DocTypeModel.description">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required"  message="Description  is required">
+                                        </dxi-validation-rule> 
+                                        <!-- <dxi-validation-rule type="stringLength" [min]="2" [max]="500"
+                                        message="Description must have at least 2 and maximum 500 characters.">
+                                     </dxi-validation-rule>
+                                      -->
+                                        
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="dx-field mb-0 mt-4">
+                            <div class="dx-field-value">
+                                <div class="toggle">
+                                    <span class="mr-10">Is Active</span>
+                                    <dx-switch [(value)]="DocTypeModel.isActive"></dx-switch>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                     
+                </div>
+            </div>
+            </perfect-scrollbar>
+            <div class="custom-popup-footer">
+                <dx-button class="btn btn-secondary" text="Cancel" (click)="Cancel()">
+                </dx-button>
+                <dx-button class="btn btn-primary" text="Save" [useSubmitBehavior]="true" ></dx-button>
+            </div>
+        </div>
+    </div>
+</form>
+</dx-validation-group>
+</dx-popup>
+ 
+<!-- ADD popup ends -->

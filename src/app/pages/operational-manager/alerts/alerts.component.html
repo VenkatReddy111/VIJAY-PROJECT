@@ -1,0 +1,57 @@
+<div class="page-heading">
+    <h1>Alerts</h1>
+</div>
+
+<div class="tab-panel">
+    <ul class="tab-panel-header ">
+        <li>
+            <a class="p-0" [ngClass]="{'active': showTabContent == item}"
+                (click)="activateTabContent(item); selectStatus(item.status)" *ngFor="let item of alerts">
+                <div class='tab-status-indicator' [ngClass]="item.status">
+                    <span class="label-text">{{item.status}}</span>
+                    <span class="total">{{item.values}}</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-panel-body plr-20">
+        <div class="table-wrapper">
+            <dx-data-grid [dataSource]="alertsTable" [showRowLines]="false" showBorders='true'>
+
+                <!--Table filters-->
+
+                <dxo-header-filter [allowSearch]="false" [visible]="false"></dxo-header-filter>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+                <!--Customized column for Alert-->
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="alert" caption="Alert">
+                </dxi-column>
+
+                <!--Customized column for Priority-->
+                <dxi-column [allowSorting]="false" dataField="priority" caption="Priority"
+                    cellTemplate="priorityTemplate"></dxi-column>
+                <div *dxTemplate="let priority of 'priorityTemplate'; let itemIndex = index">
+                    <span class="priority-status" [ngClass]='priority.data.priority'>{{priority.data.priority}}</span>
+                </div>
+
+                <!--Customized column for Date time-->
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="dateTime"
+                    caption="Date / Time"></dxi-column>
+
+                <!--Customized column for Description-->
+                <dxi-column [allowSorting]="false" [allowHeaderFiltering]="false" dataField="description"
+                    caption="Description"></dxi-column>
+
+                <!--Customized column for Action-->
+                <dxi-column [allowSorting]="false" caption="Action" dataField="action" cellTemplate="actionTemplate">
+                </dxi-column>
+                <div *dxTemplate="let action of 'actionTemplate'; let itemIndex = index">
+                    <span class="btn-link">{{action.data.action}}</span>
+                </div>
+
+
+            </dx-data-grid>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+// Component sizing
+// -------------------------
+$base-font          :      14px;
+$large-font         :      $base-font + 6; // 20px
+$medium-font        :      $base-font + 4; // 18px
+$small-font         :      $base-font + 2; // 16px
+$mini-font          :      $base-font - 2; // 12px
+
+//** Font Weight 
+// ------------------------- 
+$fontweight-regular: 400;
+$fontweight-medium: 500;
+$fontweight-bold: 700;
+
+//** Breakpoints
+// -------------------------
+$desktop-extra-large-width  :       1440px;
+$desktop-large-width        :       1366px;
+$desktop-small-width        :       1280px;
+$tablet-landscape           :       1024px;

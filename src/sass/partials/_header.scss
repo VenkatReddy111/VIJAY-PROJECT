@@ -1,0 +1,372 @@
+header{
+    padding: 20px;
+    height: 60px;
+    background-color: $white;
+    @include box-shadow(0 1px 4px 0 rgba(0, 0, 0, 0.3));
+    .dx-button{
+        .dx-button-content{
+            padding: 0px;
+        }
+    } 
+    .dx-button-mode-text{
+        .dx-state-hover{
+            background-color: transparent;
+        }
+    }
+}
+.user-panel{
+    .dx-icon-spindown{
+        font-size: $large-font + 2;
+        color: $primary-color;
+    }
+}
+.nav-menu{
+    position: absolute;
+    top:0;
+    left: 0px;
+    z-index:1;
+    .dx-button-mode-text{
+        .dx-icon{
+            color: $primary-color;
+        }
+    }
+}
+
+.brand-logo{
+    width: 330px;
+    height: auto;
+    padding-left: 20px;
+    margin-left: 40px;
+    border-left:1px solid $border-color;
+    img{
+        width: 100%;
+    }
+    a{
+        display: inline-block;
+    }
+}
+
+.trucap-logo{
+    width: 160px;
+    height: auto;
+    padding-left: 20px;
+    margin-left: 10px;
+    border-left:1px solid $border-color;
+    img{
+        width: 100%;
+    }
+}
+
+
+
+.status-indication{
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    @include border-radius(50%);
+    width: 16px;
+    height: 16px;
+    color: $white-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.low{
+        background-color: $low-status;
+    }
+    &.medium{
+        background-color: $medium-status;
+    }
+    &.high{
+        background-color: $high-status;
+    }
+}
+
+.dx-overlay-wrapper{
+    .dx-overlay-content{
+        .dx-toolbar-items-container{
+            .dx-toolbar-after{
+                .dx-item{
+                    &:nth-child(1){
+                        .dx-item-content{
+                            .dx-button{
+                                color: $white;
+                            }
+                        }
+                    }
+                    &:nth-child(2){
+                        .dx-item-content{
+                            .dx-button{
+                                color: $primary-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dx-texteditor.dx-state-focused:before, .dx-texteditor.dx-state-active:before{
+    border-bottom: 2px solid $primary-color;
+}
+
+
+
+.top-0{
+    top: 0 !important;
+}
+
+.drag-drop-card-header{
+    .doc-file-uploader {
+        .dx-button{
+            float: right;
+            background: transparent;
+        }
+        .dx-button.dx-state-hover{
+            box-shadow: none;
+        }
+        &:before{
+            left: auto !important;
+            right: 190px;
+        }
+    }
+    
+}
+.h-auto{
+    height: auto;
+}
+.main-nav{
+    margin: 0 20px 20px;
+    @include border-radius(0 0 6px 6px);
+    background-color: $primary-color !important;
+    background: $primary-color !important;  
+    .dx-list-item{
+        color: $white-color
+    }
+}
+.dx-datagrid-group-opened, .dx-datagrid-group-closed{
+    color: $primary-color;
+}
+.nested-table{
+    margin:-25px -30px;
+    .dx-datagrid-rowsview {
+        .dx-row{
+            border: none !important;
+        }
+    }
+    table{
+        background-color: transparent !important;
+    }
+    .doc-per-hr{
+        padding-right: 15px;
+    }
+    .stage-detail{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 200px;
+    }
+    .dx-row-lines {
+        > td{
+            padding-top: 8px;
+            padding-bottom: 8px;
+            line-height: inherit;
+            border-bottom: none;
+        }
+    }
+}
+
+// Date picker css starts
+
+.datepicker{
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    z-index: 1;
+    .form-control{
+      width: 300px;
+      height: 33px;
+      position: relative;
+      font-size: $mini-font;
+      font-weight: $fontweight-regular;
+      background-color: $white-color;
+      border: 1px solid $border-color;
+      @include border-radius(4px);
+    }
+    i.icon-date-and-time{
+        position: absolute;
+        right: 2px;
+        top: 50%;
+        margin-top: -13px;
+        font-size: $medium-font;
+        color: $primary-color;
+    }
+    .dx-field{
+      display: inline-block;
+      margin-bottom: 0;
+      margin-left: 20px;
+    }
+    .md-drppicker{
+        width: 660px !important;
+        left: inherit !important;
+        right: 0 !important;
+        margin: 0 !important;
+        padding: 10px 20px !important;
+        font-size: 12px !important;
+        th{
+          color:$secondary-text !important;
+        }
+        td{
+          &.active{
+            opacity: 1;
+            background-color:$primary-color !important;
+          }
+          .in-range{
+            background-color: #ececec !important;
+          }
+        }
+        .calendar.left{
+          margin-left:106px !important;
+        }
+        select{
+          background: transparent !important;
+          border: 1px solid $border-color !important;
+          margin-right: 5px !important;
+          height:30px !important;
+          padding: 0px 10px 0px 0px !important;  // 27th Jan 2020 added new
+          font-size: $base-font !important;
+          }
+          .calendar-time{
+            text-align: left !important;
+            margin: 5px 15px 0 !important;
+            border-top: 1px solid $border-color;
+            padding-top: 15px;
+          }
+          .ranges{
+            width:122px !important;
+            ul li{
+              border-bottom: 1px solid $border-color;
+              &:hover,&:focus{
+                background-color:$primary-color !important;
+                outline:none;
+                button{
+                  color: $white-color;
+                }
+              }
+              button{
+                font-size: 12px;
+                font-family: 'Roboto', sans-serif;
+                color: $secondary-text;
+                font-weight: $fontweight-medium;
+                &:focus{
+                  outline:none;
+                }
+                &.active{
+                  background-color:$primary-color !important;
+                }
+              }
+            }
+            float: left;
+            height: 100%;
+            background: rgba(0,0,0,.03);
+            position: absolute;
+            left: 0;
+            top: 0;
+            box-shadow: 1px 0 4px rgba(0,0,0,.1);
+          }
+    
+      }
+      .buttons{
+        text-align: right;
+        margin: 25px 0px 10px 0 !important;
+        display: inline-block;
+        position: relative;
+        clear: both;
+        width:100%;
+        button{
+          &.btn{
+            margin-right: 10px;
+            background: $primary-color;
+            border: 1px solid $primary-color !important;
+            color: $white-color;
+            @include border-radius(4px);
+            font-size: 12px;
+            font-weight: $fontweight-medium;
+            padding: 8px 15px 8px !important;
+            line-height: normal !important;
+            box-shadow:none !important;
+          }
+          &.btn.btn-default{
+            background: transparent;
+            color: $primary-color;
+          }
+          &:nth-child(2){
+            margin-right: 0;
+          }
+        }
+    }
+  }
+
+// Date picker css ends
+
+// Custom table css starts
+.audit-custom-table{
+    background-color: transparent !important;
+    tr{
+        td{
+            position: relative;
+            padding: 10px 20px;
+            &:first-child{
+                padding-left: 0;
+                &:before{
+                    content: "";
+                    width: 10px;
+                    height: 10px;
+                    line-height: 10px;
+                    margin-right: 15px;
+                    display: inline-block;
+                    background-color: #fafafa;
+                    z-index: 1;
+                    position: relative;
+                    border: 2px solid $primary-color;
+                    @include border-radius(100%);
+                }
+                &:after{ 
+                    content: "";
+                    width: 2px;
+                    height: 100%;
+                    display: inline-block;
+                    position: absolute;
+                    left: 4px;
+                    background-color: $primary-color; 
+                    top: 0;
+                    &:first-child{
+                        content: none;
+                    }
+                }
+            }
+        }
+        &:last-child{
+            td{
+                &:first-child{
+                    &:after{
+                        height: 50%;
+                        top: 0;
+                        bottom: initial;
+                    }
+                }
+            }
+        }
+        &:first-child{
+            td{
+                &:first-child{
+                    &:after{
+                        height: 50%;
+                        bottom: 0;
+                        top: initial;
+                    }
+                }
+            }
+        }
+    } 
+}
+// Custom table css ends

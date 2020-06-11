@@ -1,0 +1,65 @@
+  
+  @font-face {
+    font-family: 'trucap';
+    src: url('../assets/icons/trucap.eot?75130037');
+    src: url('../assets/icons/trucap.eot?75130037#iefix') format('embedded-opentype'),
+         url('../assets/icons/trucap.woff?75130037') format('woff'),
+         url('../assets/icons/trucap.ttf?75130037') format('truetype'),
+         url('../assets/icons/trucap.svg?75130037#trucap') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+   
+   [class^="icon-"]:before, [class*=" icon-"]:before {
+    font-family: "trucap";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+   
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+   
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+   
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+   
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+   
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+   
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+   
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+  }
+
+  .icon-synonym:before { content: '\e800'; } /* '' */
+  .icon-sorting:before { content: '\e801'; } /* '' */
+  .icon-delete:before { content: '\e802'; } /* '' */
+  .icon-mandatory:before { content: '\e803'; } /* '' */
+  .icon-save:before { content: '\e804'; } /* '' */
+  .icon-edit:before { content: '\e805'; } /* '' */
+  .icon-fit-to-width:before { content: '\e806'; } /* '' */
+  .icon-actual-size:before { content: '\e807'; } /* '' */
+  .icon-date-and-time:before { content: '\e808'; } /* '' */
+  .icon-mark:before { content: '\e809'; } /* '' */
+  .icon-extraction-sequence:before { content: '\e80a'; } /* '' */
+  .icon-validation:before { content: '\e80b'; } /* '' */
+  .icon-custom:before { content: '\e80c'; } /* '' */
+  .icon-regular-expression:before { content: '\e80d'; } /* '' */
+  .icon-roi:before { content: '\e80e'; } /* '' */
+  .icon-fit-to-page:before { content: '\e80f'; } /* '' */
+  .icon-zoom-out:before { content: '\e810'; } /* '' */
+  .icon-zoom-in:before { content: '\e811'; } /* '' */

@@ -1,0 +1,130 @@
+.h-160px{
+    height:160px;
+}
+
+.document-monitor-table{
+    dx-data-grid, perfect-scrollbar{
+        height: calc(100vh - 468px);
+    }
+}
+
+.horizontal-scroll{
+    overflow-x: scroll;
+    .custom-table{
+    width: 1300px;
+    }
+    .table-vertical-scroll{
+    height: calc(100vh - 512px);
+    }
+    perfect-scrollbar {
+    overflow: inherit;
+    .ps {
+    overflow: inherit !important;
+    }
+    }
+    }
+    
+.legend-list{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 0;
+    li{
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 12px;
+        font-style: italic;
+        margin-right: 10px;
+        &:before{
+            content: '';
+            display: block;
+            width:16px;
+            height:16px;
+            position: relative;
+            margin-right: 10px;
+        }
+        &.risk-SLA{
+            &:before{
+                background: #FEF1CC;
+                border:1px solid #b88700;
+            }
+        }
+        &.time-SLA{
+            &:before{
+                background: #F8CED4;
+                border:1px solid #ce2736;
+            }
+        }
+    }
+}
+
+.risk-SLA-active{
+    background-color: #FEF1CC;
+    display: block;
+    text-align: center;
+    }
+    .time-SLA-active{
+    background-color: #F8CED4;
+    display: block;
+    text-align: center;
+    }
+
+.card-header{
+    border-radius: 6px 6px 0 0 !important;
+    &.with-bg{
+        background-color: #f7f7f7 !important;
+    }
+}
+.tab-panel{
+    .tab-panel-header{
+        box-shadow: none;
+        li {
+            display: table;
+            width: 100%;
+            .label-text {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+            a{
+                padding: 7px;
+                display: table-cell;
+                .tab-status-indicator{
+                    padding: 0 10px;
+                    height:30px;
+                    line-height: 30px;
+                }
+            }
+        }
+    }
+}
+
+.tab-panel-body{
+    perfect-scrollbar{
+        height: calc(100vh - 519px);
+    }
+}
+
+//For document view
+.document-operations .documentDivParent {
+    height: calc(100vh - 250px);
+}
+//---------------added this css to resolved the scroll inside scroll issue for documentviewer
+.document-operations .documentDivParent {
+    padding: 0px !important;
+}
+
+.documentDivParent {
+    flex-basis: 89% !important;
+}
+
+.thumbnailDivParent {
+    flex-basis: 12% !important;
+}
+ 
+.user-value-list{
+    li{
+        display: block;
+    }
+}

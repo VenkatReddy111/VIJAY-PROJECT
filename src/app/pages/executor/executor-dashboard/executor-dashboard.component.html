@@ -1,0 +1,48 @@
+<div class="page-heading">
+    <h1>Source</h1>
+</div>
+
+<div class="tab-panel">
+    <ul class="tab-panel-header">
+        <li>
+            <a [ngClass]="{'active': showTabContent == item}" (click)="activateTabContent(item); selectStatus(item)" *ngFor="let item of manualInterventionTabs">
+                <span class="label-text">{{item.stageName}}</span>
+                <span class="total">{{item.documentCount}}</span>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-panel-body plr-20">
+
+        <div class="table-wrapper">
+            <dx-data-grid [dataSource]="executorDashboard" [showRowLines]="false" showBorders='true'>
+                <!--Table columns start-->
+                <dxo-selection mode="multiple"></dxo-selection>
+
+                <!--Table filters-->
+                <dxo-search-panel [visible]="true" [width]="275" placeholder="Search records"></dxo-search-panel>
+                <dxo-header-filter [allowSearch]="false" [visible]="false"></dxo-header-filter>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+                <!--Customized column for Document Type-->
+                <dxi-column [allowSorting]="false" dataField="categoryName" caption="Category"></dxi-column>
+
+                <!--Customized column for Document Sub Type-->
+                <dxi-column [allowSorting]="false" dataField="typeName" caption="Type"></dxi-column>
+                <!-- 
+                Customized column for Document ID -->
+                <dxi-column [allowSorting]="false" caption="Document ID" dataField="documentID"></dxi-column>
+                <!-- <div *dxTemplate="let docID of 'docIdTemplate'; let itemIndex = index">
+                    <span [routerLink]="['/quality-check']" class="btn-link">{{docID.data.docID}}</span>
+                </div> -->
+                <!--Customized column for Stage-->
+                <dxi-column [allowSorting]="false" dataField="subTypeName" caption="Sub Type"></dxi-column>
+                <dxi-column [allowSorting]="false" dataField="stageName" caption="Stage"></dxi-column>
+                <!--Customized column for Status-->
+                <dxi-column [allowSorting]="false" dataField="status" caption="Status"></dxi-column>
+
+
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
